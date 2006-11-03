@@ -1,0 +1,16 @@
+To build Cgc (Coin Graph Classes), see the INSTALL file.
+
+To use Cgc you do not need any other packgaes or libraries.  
+
+Cgc is a template header library.  The code is compiled into 
+your executable when you build your executable.
+
+To see an example use of Cgc, see the examples directory.  
+To build an example:
+cd examples
+make 
+
+To build the unit tests:
+cd test
+make 
+

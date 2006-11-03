@@ -1,0 +1,27 @@
+<title>Traversals</title>
+<body>
+<H1>Purpose</H1>
+<P>The purpose of the graph traversal algorithms are two-fold.  
+<li>First and foremost to give a reasonable wayto traverse the graphs.  </li>
+<li>Second to show samples of how to traverse the graphs in different ways. </li>
+<H1>Breadth First Traversal (BFTraversal)</H1>
+<li>This iterates through the graph's nodes in a breadth first order. </li>
+<H2>Algorithm</H1>
+<P>This uses a queue to store child nodes.  They are processes in FIFO order.  
+<p>Visit a node, putting it's children (if it has any) in the queue.
+<p>Pop the front of the queue and process that node.  Continue until the queue is empty.
+<H2>Potential Improvements:</H1>
+<P>
+Keep a side set to check for multiple visitation of the same node (cycle detection).
+<P>
+<H1>Depth First Traversal (DFTraversal)</H1>
+<li>This iterates through the graph's nodes in a depth first order. </li>
+<H2>Algorithm</H1>
+<P>This uses a stack to store child nodes.  They are processes in LIFO order.  
+<p>Visit a node, putting it's children (if it has any) in the stack.
+<p>Pop the top of the queue and process that node.  Continue until the stack is empty.
+<H2>Potential Improvements:</H1>
+<P>
+Keep a side set to check for multiple visitation of the same node (cycle detection).
+<P>
+</body>

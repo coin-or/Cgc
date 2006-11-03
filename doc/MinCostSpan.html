@@ -1,0 +1,13 @@
+<title>Min Cost Spanning Tree</title>
+<body>
+<H1> Purpose</H1>
+<P> The Min Cost Spanning Tree finds a tree of minimum cost 
+<H1>Algorithm</H1>
+<P>Initialize each node as it's own tree in a forest
+<p>Sort the arcs in min-cost order.
+<p>For each arc, attempt to add it.  If both ends of the arc have the same tree id, then don't add the arc.
+<p>If the nodes have differing tree ids, then add the arc and merge the trees together.
+<p>The heavy computation is the disjoint set union.
+<H1>Potential Improvements:</H1>
+<P>I think this one is about as good as it gets.<P>
+</body>

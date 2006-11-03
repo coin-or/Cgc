@@ -1,0 +1,189 @@
+<title>Documentation for CoinGraphClasses - Network C++Template Implementation</title>
+<body>
+<h1>Purpose of CoinGraphClasses</h1>
+The purpose of the CoinGraphClasses collection of Network Representations and Algorithms
+is to facilitate the development and implementation of Network Algorithms.
+The library was designed with some key ideas in mind:
+<h2>Key ideas</h2>
+<li>Use STL and STL-like interfaces
+<li>Allow for common iteration through the network containers regardless of representation
+<li>Provide the ability to access the data structures named "nodes" and "arcs" for clarity
+<li>Any Network representation should be able to survive more than one Algorithm
+<li>Any Algorithm should be able to survive more than one Network Representation
+<li>Make the representations as compact as possible without sacrificing speed or time complexity
+<h1>Terminology</h1>
+<p> <B>node</B>:Often called a vertex, or point.  It is normally represented 
+by a circle.  In a transportation Network, these might be locations or cities 
+on a map
+<p> <B>arc</B>:Often called an edge, or arrow.  It may be either directed or 
+undirected.  The head is the destination, the tail is the origin.  The head 
+and tail are Nodes that are at either end. In a transportation network, the Arcs
+might be roads, or navigation channels in rivers, or aircraft flight patterns.
+They supply connectivity between the Nodes.  A one-way street might be 
+represented by a directed arc.  A two-way street might be an undirected arc or
+by two directed arcs that point in opposite directions.
+<p> <B>iterator</B>:An iterator provides a mechanism for accessing Nodes 
+sequentially.  With STL, you can have a collection of ints in an array called:
+vector < int > myVector.  An iterator to this collection would be declared 
+vector < int > ::iterator ;
+<p> <B>const_iterator</B>:A constant reference version of an iterator.  The
+user cannot alter the value referred to by the iterator.
+<p> <B>arc_iterator</B>: An arc_iterator allows the user to access arcs of the 
+network sequentially.  The arcs may be accessed using two different means.  One
+way is to sequentially access all the arcs in the network.  The other is to 
+access all the arcs at one node.  Both have a common iterator type.  The only 
+real difference is the test for the end of iteration.  If you want to iterate 
+across a node's arcs, you use begin() and end() member functions of the node.  
+If you wish to iterate through a network's arcs, you use the arc_begin() and
+arc_end() member functions.
+<p> <B>const_arc_iterator</B>: A constant reference version of an arc_iterator.
+The user cannot alter the arc referred to by the iterator.
+<p> <B>algorithm</B>:An algorithm is a series of steps that will accomplish a 
+certain task with some (hopefully known) space and time complexity.  A solver 
+using the CoinGraphClasses collections can be implemented similar to STL algorithms.  
+This means that if you follow the common interface between different CoinGraphClasses
+collections, then the algorithm can perform (maybe with different complexity)
+on any appropriate CoinGraphClasses network with very little modification.  A 
+demonstration is included to show how this might be accomplished.
+<h1>C++ and the Standard C++ Library</h1>
+<p>The introduction of STL into the C++ library will have significant 
+impact on algorithm developers using C++.  With the advent of common 
+containers and basic Computer Science 
+algorithms as part of the standard, code (hence algorithms) may be shared more 
+readily and used with data types that more difficult to use in the past.
+<p>More information on STL is available either from books, or the web.  This will not assist
+in teaching you STL.  However, if you are familiar with STL and C++, then you 
+should find using CoinGraphClasses will be second nature.  
+<h1>Network Containers</h1>
+<p>There are some difficulties in building containers for Networks that do 
+not arise with normal containers.  Normal containers have a single data 
+type (or structure or class) 
+that are collected together and maybe compared or sorted, etc.  In the case of a Network, there 
+are two related/distinct types: Nodes and Arcs.  The Arcs refer to Nodes, but otherwise, they
+are somewhat independent.
+<p>In the implementation of Networks in CoinGraphClasses, every CoinGraphClasses container has a collection of Nodes.
+The Nodes are containers for their outbound Arcs.  (In some implementations, there are
+back-arcs too).  Also, there may be data on the Nodes and there may be data on the arcs.  
+Unlike normal containers, this may be different data types.
+<p>Maybe a simple example would help.  In a simple Shortest Path problem, there are locations
+(nodes) and distances between them (represented by durations or distances on the arcs).  The 
+goal is to find the shortest way between two locations using only the distances specified(arcs).  
+Clearly, there must be some way of storing the duration/distance of the arc on the arc.  Also,
+in most algorithms, there must be some way of storing information regarding the 'current 
+status of a solution at the nodes.  
+<p>Users of CoinGraphClasses containers must implement Node and Arc content classes for thier problem.
+In the example above, the user may create a Miles and a NodeStatus for the Arc cost data and
+the Node label data.  
+<p>CoinGraphClasses provides template containers that are parameterized on the Node and Arc data implemented
+by the user.  Once again following the example above, and assuming a Static Network is 
+suitable, the user might create a CoinGraphClasses container using:
+<p>
+<i>typedef StaticNet< NodeStatus,Miles > MyNetType; MyNetType myNetwork;</i>
+<h2>Things in common</h2>
+<p> Each of the network representations have a few things in common.  
+Few of the containers have special functions.  The main things are storage and retrieval of
+nodes and arcs in the graph.  Similar to STL containers, the complexity
+of retrieving one node or one arc depends on the implementation of the graph.   
+<p>Node Ids are used to specify distinct nodes.  The default comparison
+for nodes is by Node Id.  For Arcs, there is no real default comparison.  
+<p>Iterators over nodes and arcs and arcs at a node are available with each collection.  
+Also, the complexity of iterating is constant.  (i.e. getting the 'next' is performed in
+constant time complexity.
+<p>Algorithms can be applied to any of the network implementations without 
+knowing the particular
+implementation.  There are some times when incompatibilities exist.  
+Great care was taken to ensure that a StaticNet did not pay penalties on 
+complexity just to fit the interface with a DynNet.  But, even though
+the interface is the same, care must still be taken.  The StaticNet 
+must be created in a particular order.   If the order is wrong, the Static
+Net will not load properly.  
+<h2> Network Container classifications</h2>
+<p>Performance in many conditions was a primary concern in the design.  
+The StaticNet is really fast.  However, it cannot be resized after load
+time.  The DynNet is fairly fast as well, but some operations are not
+as quick and the memory demand is higher.  Some networks are truly directed 
+and there is no purpose in having back-pointers.  However, there is a need
+in some cases to be able to traverse both directions along an arc, 
+regardless of whether it is directed or undirected.  These needs motivated
+the creation of two classifications of Networks:  One classification is
+based on Static versus Dynamic.  The other is based on single versus both
+directions stored on an arc.
+<h3>Static Network vs Dynamic Network</h3>
+<p> The Static Network was born out of the need for a very fast network 
+implementation.  Essentially, it is a Forward Star representation where 
+the nodes and arcs are both stored in STL vectors.  The complexity for
+getting a node given a NodeId is constant.  This is important in some
+algorithms.  However, this quickness is paid for in the lack of ability
+to delete arcs or to add arcs even in a non-standard order.  If you are 
+willing to pay the price of careful construction and post-load dynamic
+behavior, StaticNet is the network representation for the greatest speed.
+<p>The Dynamic Network (DynNet) allows for creation and deletion of arcs 
+and nodes.  You can freely create and destroy nodes randomly.  However, 
+this freedom comes at a price.  The complexity for lookup of a Node given
+a Node Id is O(log(|V|)).  where |V| is the number of vertices in the graph.  
+Also, there is a higher space requirement.  Although it is a constant 
+factor based on the size of the graph, it may still be much larger than 
+the StaticNet for large graphs.
+
+<h1>Network Algorithms</h1>
+<h2>Shortest Path (DijkSolver, LayerSPSolver)</h2>
+<P>The shortest path algorithm implementation mostly follows the original
+Dijkstra style.  It is based on that strategy.  It uses a heap to hold
+potentially 'active' nodes.  There is a label at each node.  The particular
+implmentation was inspired by an algorithm in "Network Flows" book by 
+Ahuja, Mangnanti, and Orlin. 
+<P>The Shortest Path Problem is the problem of finding the minimum 
+"sum of weights" path through a network with weights on each arc.  There
+is a distinct source and the solver finds minimum cost paths to all other
+nodes.  They are extracted from the solver object using a collection of
+Path objects. (In rough terms Path object is a collection of Node Ids + 
+a cost.)
+<P>The Layered Shortest Path solver solves a variant of this problem.
+<BR><A HREF="ShortestPath.html">ShortestPath</A> <BR>
+<h2>Minimum Cost Spanning Tree (MSTSolver)</h2>
+<P>The Minimum Cost Spanning Tree Problem involves finding the minimum
+cost collection of arcs such that all nodes are connected into a tree.  Note 
+that this requires an undirected graph (in examples, I chose a StaticFBNet).
+<BR><A HREF="MinCostSpan.html">MinCostSpan</A> <BR>
+<h2>Exhaustive Depth First Traversal (DFTraversal)</h2>
+<P>There are several ways to traverse a graph.  This is an exhaustive Depth
+first search into the graph.  It uses recursion.  
+<P> Note that this implementation is exhaustive in that it doesn't stop if 
+a node has previously been visited.  If the graph has cycles, this will be
+an infinite loop!  
+<P>It is implemented in the form of an iterator.  Each time the iterator is 
+incremented (++), the object moves on to the next node in the sequence.  
+It could be extended to be non-repeating if data is added at the nodes that
+indicate the node has previously been visited. 
+<BR><A HREF="Traversals.html">Traversals</A> <BR>
+<h2>Exhaustive Breadth First Traversal (BFTraversal)</h2>
+<P>Similar to DFS, but uses a queue as storage of active nodes.  This can be
+fairly painful in terms of storage....so beware.
+<BR><A HREF="Traversals.html">Traversals</A> <BR>
+<h2>All Paths between source and sink (PathFind)</h2>
+This exhaustive algorithm is similar to DFS, except it stores all paths that
+happen to run into the sink.  more details can be viewed at:
+<BR><A HREF="PathFind.html">PathFind</A> <BR>
+An example is the PathFindExample.cpp example code.
+<h1>Some Sample Code:</h1>
+<h2>Simple</h2>
+Simple construction of a graph with just a few nodes and arcs.
+<h2>SimpleShortestPath</h2>
+This is a simple example that tests the network as well as the simple 
+algorithm to solve the Shortest Path problem in a directed acyclic network.
+<h2>PathFindExample</h2>
+This is a little more complex, but not overwhelming.  There are 3 main points to this example:
+@li Demonstrate the use of the PathFind algorithm
+@li Demonstrate having "empty data" on the graph thus reducing ram consumption
+@li Demonstrate the use of a DynNet and a destructive example of removing a node on the fly
+<h2>SSPSolver</h2>
+This is a comprehensive example showing much more complex usage of the graph
+@li more complex data storage on nodes
+@li more complex data storea on arcs
+@li implements a well known algorithm for solving min cost network flow problems (Successive Shortest Paths)  There is a reference in the code to the source of the algorithm.
+<h1>More detailed code information</h1>
+See the doxygen generated comments for more information on the particular classes.  In particular, peruse the "Public Interface" module comments.
+<h1> Future plans</h1>
+<BR><A HREF="FuturePlans.html">Future Plans</A> <BR>
+
+</body>

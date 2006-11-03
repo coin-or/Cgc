@@ -1,0 +1,29 @@
+<title> PathFind algorithm </title>
+<body>
+<H1> Purpose</H1>
+<P>The purpose of the PathFind Algorithm class is to find an exhaustive list
+of all paths between to distinct nodes (source and sink).  This document
+identifies how it is accomplished and documents the test program.
+<H1>PathFind construction </H1>
+<p>The PathFind object's construction is completed by passing in arguments for
+the GraphType (satisifies the template parameters), a reference to the 
+graph, and identification of the source and sink within the graph.
+<p>The constructor also takes care of a little maintenance.  It initializes
+the list of active candidates to have the source node.
+<H1>Algorithm</H1>
+<P>The heart of this implementation is a Depth First Search with some 
+modifications.  The modifications are centered around the identification of
+stopping criteria within the recursion.  
+<H1>Potential Improvements:</H1>
+<P>
+This could be improved by adding a topological ordering and hence a
+reductions in nodes visited may be possible.  However, to me this seemed
+a bit specific for this general implementation.
+<P>
+Also, the recursion could be unwound thus reducing the information stored on 
+the stack.  
+<P>
+Another convenient enhancement would be to make this more like an iterator
+where once initialized, a ++ operator would return a reference to the next
+Path.  This could occur instead of the current "all or nothing" format.
+</body>

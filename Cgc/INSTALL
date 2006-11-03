@@ -1,0 +1,29 @@
+As Cgc (Coin Graph Classes) is a header-file-only template library, it
+doesn't require building independent of your code.
+
+To access the library, add an include path to your compile line.
+
+As an example, for g++, this is something like: -I(basedir)/src   
+where (basedir) is the directory where Cgc is installed.
+
+To build the example:
+cd examples
+make
+
+To run the examples:
+simple
+simpleShortestPath
+pathFindExample
+sspsolver
+
+To build the unit tests:
+cd test
+make
+
+To run the unit tests:
+unitTest
+
+On success of the unit tests, there should be a summary of all the tests run, 
+and a final line:
+PASSED
+

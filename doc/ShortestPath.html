@@ -1,0 +1,24 @@
+<title>ShortestPath </title>
+<body>
+<H1>Simple Single source to all connected nodes (DijkSolver)</H1>
+<H2>Purpose</H2>
+<P>Given a graph G, a unique source node s, find the shortest path to all reachable nodes.
+<H2>Algorithm</H2>
+<P>This solver keeps a heap of arcs reaching from the "finalized label" nodes across the frontier 
+of unlabeled and non-finalized nodes.  Each iteration, the minimum cost non-permanently labeled node
+is permanently labeled, and the outbound arcs are added into the frontier heap.
+<H2>Potential Improvements:</H1>
+<li>Check for negative costs in the arcs. </li>
+<li>Implement a method which suffers less from negative costs. </li>
+<li>Allow for non-integer costs and labels.
+<H1>Layered shortest path solver (LayerSPSolver)</H1>
+<H2>Purpose</H2>
+<P>Given a graph G, a unique source node s, and markers on the arcs indicating "active" or "inactive", 
+find the shortest path to all reachable nodes using only "active" arcs.
+<H2>Algorithm</H2>
+<P>This behaves exactly like the Dijksolver, except that it ignores "inactive" arcs.
+<H2>Potential Improvements:</H1>
+<li>Check for negative costs in the arcs. </li>
+<li>Implement a method which suffers less from negative costs. </li>
+<li>Allow for non-integer costs and labels.
+</body>
