@@ -1,5 +1,6 @@
 * text=auto !eol
 Cgc/AUTHORS -text
+Cgc/Externals -text
 Cgc/INSTALL -text
 Cgc/LICENSE -text
 Cgc/README -text
