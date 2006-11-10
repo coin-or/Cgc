@@ -539,7 +539,7 @@ private:
   
 public:
   
-    typedef typename SFBNetNodeTypes<NodeInfo, ArcInfo>::SFBNNodeBag::iterator iterator;
+    typedef typename NodeCollection::iterator iterator;
     typedef typename SFBNetNodeTypes<NodeInfo, ArcInfo>::SFBNNodeBag::const_iterator const_iterator;
     //typedef typename NodeCollection::reverse_iterator reverse_iterator;
     //typedef NodeCollection::const_reverse_iterator const_reverse_iterator;

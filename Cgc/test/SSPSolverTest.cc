@@ -26,7 +26,7 @@ template <class NetType>
 std::ostream & operator<<(std::ostream &os, const NetType &net)
 {
     os<<"SSPNet|"<<net.size()<<"|:"<<std::endl;
-    for(NetType::const_iterator nodeIt = net.begin();
+    for(typename NetType::const_iterator nodeIt = net.begin();
         nodeIt!= net.end();++nodeIt)
         {
         os<<"Node["<<net.getNodeId(nodeIt)<<"]"<<*(*nodeIt)<<std::endl;
@@ -55,15 +55,15 @@ NetType *buildNet(std::string &testname)
     //                           bwd ==> neg cost, zero capacity.
     //
     NetType *n = new NetType(4,10);
-    NetType::iterator it0=n->insert(MCFNodeData(4,0));
-    NetType::iterator it1=n->insert(MCFNodeData(0,0));
-    NetType::iterator it2=n->insert(MCFNodeData(0,0));
-    NetType::iterator it3=n->insert(MCFNodeData(-4,0));
+    typename NetType::iterator it0=n->insert(MCFNodeData(4,0));
+    typename NetType::iterator it1=n->insert(MCFNodeData(0,0));
+    typename NetType::iterator it2=n->insert(MCFNodeData(0,0));
+    typename NetType::iterator it3=n->insert(MCFNodeData(-4,0));
 
-    NetType::iterator nodeZero=n->find(0);
-    NetType::iterator nodeOne=n->find(1);
-    NetType::iterator nodeTwo=n->find(2);
-    NetType::iterator nodeThree=n->find(3);
+    typename NetType::iterator nodeZero=n->find(0);
+    typename NetType::iterator nodeOne=n->find(1);
+    typename NetType::iterator nodeTwo=n->find(2);
+    typename NetType::iterator nodeThree=n->find(3);
     if(it0!=nodeZero)
         ti->failItem(__SPOT__);
     if(it1!=nodeOne)
@@ -99,10 +99,10 @@ NetType *buildNet(std::string &testname)
 template < class NetType >
 std::ostream &operator<<(std::ostream &os, const typename SSPSolver<NetType >::Solution &sol)
 {
-    for(std::vector<SolType::FlowData>::const_iterator sci = sol.getFlowData().begin();
+    for(typename std::vector<typename SolutionType<NetType>::FlowData>::const_iterator sci = sol.getFlowData().begin();
         sci!=sol.getFlowData().end();sci++)
         {
-        const NetType::Arc &arc =*((*sci).arcIter);
+        const typename NetType::Arc &arc =*((*sci).arcIter);
         int flow=(*sci).flow;
         int origNode=(*sci).tail;
         int headNode=(*sci).head;
@@ -120,7 +120,7 @@ void SSPSolverTest1(const std::string &testName)
     std::string buildTestName=testName+"build";
     NetType *n = buildNet<NetType>(buildTestName);
     SSPSolver<NetType > solver;
-    SSPSolver<NetType >::Solution sol(*n);
+    typename SSPSolver<NetType >::Solution sol(*n);
     //cout<<*n<<std::endl;    
     solver.solve(*n);
     int x=solver.getSolution(*n,sol);

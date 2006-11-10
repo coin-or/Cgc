@@ -23,7 +23,7 @@ namespace Cgc
         NodeIterNodeIdLess(const Net &_net)
             :net(_net)
         {}
-        bool operator()(typename const Net::iterator &it1, typename const Net::iterator &it2)const
+        bool operator()(const typename Net::iterator &it1, const typename Net::iterator &it2)const
         {
             return net.getNodeId(it1) < net.getNodeId(it2);
         }

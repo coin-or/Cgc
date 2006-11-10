@@ -46,7 +46,7 @@ void buildNet(MyNetType &netToFill)
 template < class MyNetType >
 bool checkResult(MyNetType &traversedNet)
 {
-    for(MyNetType::iterator nodeIt = traversedNet.begin();
+    for(typename MyNetType::iterator nodeIt = traversedNet.begin();
         nodeIt!=traversedNet.end();nodeIt++)
     {
         switch(traversedNet.getNodeId(nodeIt).getNodeId())
@@ -89,7 +89,11 @@ void testDFT()
     for(traveler = net.begin();
         traveler != net.end(); traveler++)
     {
-        (*(*(*traveler)))++;
+    typename NetType::iterator nodeIt = (*traveler);
+    // @todo the previous const_cast shouldn't be necessary gcc3.x
+    typename NetType::Node &node = const_cast<typename NetType::Node  &>(*nodeIt);
+    int &i = *node;
+    i++;
     }
     if(!checkResult(net))
     {

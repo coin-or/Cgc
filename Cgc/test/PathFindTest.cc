@@ -52,14 +52,20 @@ void buildSimpleNet(NetType &netToFill)
   netToFill.insert(3);
   netToFill.insert(4);
   netToFill.insert(5);
-  netToFill.arc_insert(netToFill.find(0),0,netToFill.find(1));
-  netToFill.arc_insert(netToFill.find(1),0,netToFill.find(2));
-  netToFill.arc_insert(netToFill.find(1),0,netToFill.find(3));
-  netToFill.arc_insert(netToFill.find(1),0,netToFill.find(4));
-  netToFill.arc_insert(netToFill.find(2),0,netToFill.find(4));
-  netToFill.arc_insert(netToFill.find(2),0,netToFill.find(5));
-  netToFill.arc_insert(netToFill.find(3),0,netToFill.find(4));
-  netToFill.arc_insert(netToFill.find(4),0,netToFill.find(5));
+  typename NetType::iterator zero = netToFill.find(0);
+  typename NetType::iterator one = netToFill.find(1);
+  typename NetType::iterator two = netToFill.find(2);
+  typename NetType::iterator three = netToFill.find(3);
+  typename NetType::iterator four = netToFill.find(4);
+  typename NetType::iterator five = netToFill.find(5);
+  netToFill.arc_insert(zero,0,one);
+  netToFill.arc_insert(one,0,two);
+  netToFill.arc_insert(one,0,three);
+  netToFill.arc_insert(one,0,four);
+  netToFill.arc_insert(two,0,four);
+  netToFill.arc_insert(two,0,five);
+  netToFill.arc_insert(three,0,four);
+  netToFill.arc_insert(four,0,five);
   //std::cout<<netToFill<<std::endl;
 }
 template <class NetType>
@@ -68,7 +74,7 @@ void findPathTest(const std::string &testName)
   TestItem *ti = new TestItem(testName.c_str());
   NetType myNet(100,100);
   buildSimpleNet(myNet);
-  NetType::iterator backOne = myNet.end();
+  typename NetType::iterator backOne = myNet.end();
   backOne--;
   PathFind<NetType> myFind(myNet,myNet.begin(),backOne);
   JustPaths paths;

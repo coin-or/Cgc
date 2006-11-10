@@ -257,7 +257,10 @@ public:
             for(typename NetType::iterator nodeIt = net.begin();
                 nodeIt!=net.end(); nodeIt++)
                 {
-                MCFNodeData &nd = (*(*nodeIt));
+                // @TODO this shouldn't be necessary to const_cast this.
+                // StaticFBNet failure.
+                typename NetType::Node &nodeRef=const_cast<typename NetType::Node &>(*nodeIt);
+                MCFNodeData &nd = (*nodeRef);
                 int newPi = nd.getPi()-nd.getLabel();
                 nd.setPi(newPi);
                 }
@@ -273,8 +276,12 @@ public:
                 }
             // compute gamma as min of source, sink, or d 
             typename NetType::iterator t = net.find(l);
-            int sE = (*(*s)).getE() ;
-            int tE = (*(*t)).getE() ;
+            // @TODO the following const_casts should not be necessary (gcc3.x)
+            typename NetType::Node &nS = const_cast<typename NetType::Node &>(*s);
+            typename NetType::Node &nT = const_cast<typename NetType::Node &>(*t);
+            //int sE = (*(*s)).getE() ;
+            int sE = (*(nS)).getE() ;
+            int tE = (*(nT)).getE() ;
             int gam = std::min(std::min(sE,-tE), d);
             //cout<<"Augmenting path by gamma="<<gam<<endl;
             //cout<<"s="<<(*(*s)).getE()<<endl;
@@ -305,8 +312,10 @@ public:
                 x+=ad.getC()*gam;
                 }
             // update E
-            (*(*s)).setE(sE-gam) ;
-            (*(*t)).setE(tE+gam) ;
+            typename NetType::Node &nS2 = const_cast<typename NetType::Node &>(*s);
+            typename NetType::Node &nT2 = const_cast<typename NetType::Node &>(*t);
+            (*(nS2)).setE(sE-gam) ;
+            (*(nT2)).setE(tE+gam) ;
             // update E, & D
             if(sE-gam==0)
                 {
