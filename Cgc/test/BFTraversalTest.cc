@@ -5,12 +5,15 @@
 */
 #include <iostream>
 #include <StaticNet.h>
+#include <StaticFBNet.h>
 #include <DynNet.h>
 
 #include <BFTraversal.h>
 #include "TestBed.h"
+#include <sstream>
 
 typedef StaticNet<int,int> MyNetType;
+typedef StaticFBNet<int,int> MyNetType2;
 typedef DynNet<int,int> MyNetType3;
 
 template < class MyNetType >
@@ -41,38 +44,66 @@ void buildNet(MyNetType &netToFill)
 		       node3);
 }
 
+template < class MyNetType >
+bool checkResult(MyNetType &traversedNet)
+{
+    for(MyNetType::iterator nodeIt = traversedNet.begin();
+        nodeIt!=traversedNet.end();nodeIt++)
+    {
+        switch(traversedNet.getNodeId(nodeIt).getNodeId())
+        {
+        case 0:
+            if(*(*nodeIt)!=2)
+                return false;
+            break;
+        case 1:
+            if(*(*nodeIt)!=3)
+                return false;
+            break;
+        case 2:
+            if(*(*nodeIt)!=6)
+                return false;
+            break;
+        case 3:
+            if(*(*nodeIt)!=12)
+                return false;
+            break;
+        default:
+            return false;
+        }
+    }
+    return true;
+}
+static int i;
+template < class NetType >
+void testBFT()
+{
+    std::stringstream testName;
+    testName<<"BFT test:"<<i++;
+    TestItem *ti = new TestItem(testName.str().c_str());
+    NetType net(100,100);
+    buildNet<NetType>(net);
+
+    BFTraversal<NetType> traveler(net);
+
+    for(traveler = net.begin();
+        traveler != net.end(); traveler++)
+    {
+        (*(*(*traveler)))++;
+    }
+    if(!checkResult(net))
+    {
+        ti->failItem(__SPOT__);
+    }
+    ti->passItem();
+}	
 
 int BFTraversalTest(TestBed &bed)
 {
-  std::cout<<"Testing StaticNet"<<std::endl;
-  MyNetType net(100,100);
-  buildNet<MyNetType>(net);
-  BFTraversal<MyNetType> traveler(net);
+    TestItem::setBed(&bed);
+    testBFT<MyNetType>();
+    testBFT<MyNetType2>();
+    testBFT<MyNetType3>();
 
-  for(traveler = net.begin();
-       traveler != net.end(); traveler++)
-      std::cout<<" at node "<<net.getNodeId(*traveler)<<std::endl;
-	
-/*
-  cout<<"Testing StaticFBNet"<<endl;
-  MyNetType2 net2(100,100);
-  buildNet<MyNetType2>(net2);
-  BFTraversal<MyNetType2> traveler2(net2);
-
-  for(traveler2 = net2.begin();
-       traveler2 != net2.end(); traveler2++)
-      cout<<" at node "<<net2.getNodeId(*traveler2)<<endl;
-
-*/
-  std::cout<<"Testing DynNet"<<std::endl;
-  MyNetType3 net3(100,100);
-  buildNet<MyNetType3>(net3);
-  BFTraversal<MyNetType3> traveler3(net3);
-
-  for(traveler3 = net3.begin();
-       traveler3 != net3.end(); traveler3++)
-      std::cout<<" at node "<<net3.getNodeId(*traveler3)<<std::endl;
-
-	std::cout<<"not a real test...but suffices"<<std::endl;
   return 0;
 }

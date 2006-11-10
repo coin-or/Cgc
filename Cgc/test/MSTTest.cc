@@ -13,6 +13,8 @@
 #include "TestBed.h"
 #include <stdio.h>
 
+#define DYNTEST
+#define STATICFBTEST
 typedef StaticFBNet< MSTNodeLabel, MSTArcCost > StaticMSTNet1;
 typedef DynNet< MSTNodeLabel, MSTArcCost > DynMSTNet2;
 

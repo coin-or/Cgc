@@ -698,7 +698,7 @@ namespace Cgc
             //cout<<"Found head, id="<<getNodeId(head)<<endl;
             //else
             //cout<<"NO HEAD NODE"<<endl;
-            Arc anArc(tail,0,find(headId));
+            Arc anArc(tail,ArcInfo(),find(headId));
             //cout<<"Search Arc is "<<anArc<<endl;
             //cout<<"calling tail to find arc"<<endl;
             typename Node::iterator arcFound=(*tail).findArc(&anArc);

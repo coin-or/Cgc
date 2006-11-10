@@ -12,10 +12,13 @@
 #include <LayerSPSolver.h>
 #include "TestItem.h"
 #include "TestBed.h"
+#include <iostream>
+
+#define STATICFBTEST
+#define DYNTEST
 
 typedef StaticFBNet< SPNodeLabel, SPArcCost > DynLayerSPNet2;
 typedef StaticFBNet< SPNodeLabel, SPArcCost >::Node DynLayerSPNetNode;
-
 typedef DynNet< SPNodeLabel, SPArcCost > DynLayerSPNet3;
 
 char labelString[1000];
@@ -460,7 +463,6 @@ int LayerSPTest(TestBed &myBed)
   TestItem::setBed(&myBed);
 
 #ifdef STATICFBTEST
-  cout<<"Testing StaticFBNet"<<endl;
   test1<DynLayerSPNet2>();
   test2<DynLayerSPNet2>();
   test3<DynLayerSPNet2>();
@@ -468,9 +470,11 @@ int LayerSPTest(TestBed &myBed)
   test5<DynLayerSPNet2>();
   test6<DynLayerSPNet2>();
   test7<DynLayerSPNet2>();
+#else
+TestItem *ti = new TestItem("StaticFBNet with LayeredSP");
+ti->failItem(__SPOT__);
 #endif
 #ifdef DYNTEST
-  cout<<"Testing DynNet"<<endl;
   test1<DynLayerSPNet3>();
   test2<DynLayerSPNet3>();
   test3<DynLayerSPNet3>();

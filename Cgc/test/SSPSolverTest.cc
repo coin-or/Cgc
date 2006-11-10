@@ -4,23 +4,25 @@
   All Rights Reserved.
 */
 #include <StaticNet.h>
+#include <DynNet.h>
+#include <StaticFBNet.h>
 #include <SSPSolver.h>
 #include "TestItem.h"
 #include "TestBed.h"
 
 #include <iostream>
 #include <set>
+#include <sstream>
 
 using namespace Cgc;
 
 // Successive Shortest Path min cost flow -- Mangnanti Pg 321
 // section 9.7
 
-typedef StaticNet<MCFNodeData,ArcData> NetType;
-typedef StaticNet<MCFNodeData,ArcData>::Node NodeType;
-typedef StaticNet<MCFNodeData,ArcData>::Arc ArcType;
-typedef SSPSolver<NetType > SolverType;
-
+typedef StaticNet<MCFNodeData,ArcData>  MyNetType;
+typedef DynNet<MCFNodeData,ArcData>     MyNetType2;
+typedef StaticFBNet<MCFNodeData,ArcData> MyNetType3;
+template <class NetType>
 std::ostream & operator<<(std::ostream &os, const NetType &net)
 {
     os<<"SSPNet|"<<net.size()<<"|:"<<std::endl;
@@ -28,7 +30,7 @@ std::ostream & operator<<(std::ostream &os, const NetType &net)
         nodeIt!= net.end();++nodeIt)
         {
         os<<"Node["<<net.getNodeId(nodeIt)<<"]"<<*(*nodeIt)<<std::endl;
-        for(NodeType::const_iterator arcIt = (*nodeIt).begin();
+        for(StaticNet<MCFNodeData,ArcData>::Node::const_iterator arcIt = (*nodeIt).begin();
             arcIt!=(*nodeIt).end();arcIt++)
             {
             os<<"  ArcTo["<<net.getNodeId((*arcIt).head())<<"]"<<
@@ -41,26 +43,35 @@ std::ostream & operator<<(std::ostream &os, const NetType &net)
         }
     return os;
 }
-
-NetType *buildNet()
+static int instance=0;
+template <class NetType>
+NetType *buildNet(std::string &testname)
 {
-
+    TestItem *ti = new TestItem(testname.c_str());
     //
     // Create a network.
     // Add nodes with source having positive , zero
     // add arcs BOTH DIRECTIONS: fwd ==> positive cost, and capacity
     //                           bwd ==> neg cost, zero capacity.
     //
-    NetType *n = new NetType(4,4);
-    n->insert(MCFNodeData(4,0));
-    n->insert(MCFNodeData(0,0));
-    n->insert(MCFNodeData(0,0));
-    n->insert(MCFNodeData(-4,0));
-    //NetType::arc_iterator ni =
+    NetType *n = new NetType(4,10);
+    NetType::iterator it0=n->insert(MCFNodeData(4,0));
+    NetType::iterator it1=n->insert(MCFNodeData(0,0));
+    NetType::iterator it2=n->insert(MCFNodeData(0,0));
+    NetType::iterator it3=n->insert(MCFNodeData(-4,0));
+
     NetType::iterator nodeZero=n->find(0);
     NetType::iterator nodeOne=n->find(1);
     NetType::iterator nodeTwo=n->find(2);
     NetType::iterator nodeThree=n->find(3);
+    if(it0!=nodeZero)
+        ti->failItem(__SPOT__);
+    if(it1!=nodeOne)
+        ti->failItem(__SPOT__);
+    if(it2!=nodeTwo)
+        ti->failItem(__SPOT__);
+    if(it3!=nodeThree)
+        ti->failItem(__SPOT__);
     // arc one forward
     n->arc_insert(nodeZero,ArcData(2,4,true),nodeOne);
     //arc2forward
@@ -81,12 +92,12 @@ NetType *buildNet()
     n->arc_insert(nodeThree,ArcData(-3,0,false),nodeOne);
     //arc5reverse
     n->arc_insert(nodeThree,ArcData(-1,0,false),nodeTwo);
+    ti->passItem();
     return n;
 }
 
-typedef SolverType::Solution SolType;
-
-std::ostream &operator<<(std::ostream &os, const SolType &sol)
+template < class NetType >
+std::ostream &operator<<(std::ostream &os, const typename SSPSolver<NetType >::Solution &sol)
 {
     for(std::vector<SolType::FlowData>::const_iterator sci = sol.getFlowData().begin();
         sci!=sol.getFlowData().end();sci++)
@@ -101,18 +112,18 @@ std::ostream &operator<<(std::ostream &os, const SolType &sol)
     return os;
 }
 
-static void test1()
+
+template < class NetType >
+void SSPSolverTest1(const std::string &testName)
 {
-    TestItem *ti=new TestItem("SSPSolverTest:01:build and solve one MCF problem");
-    NetType *n = buildNet();
-    SolverType solver;
-    SolverType::Solution sol(*n);
+    TestItem *ti=new TestItem(testName.c_str());
+    std::string buildTestName=testName+"build";
+    NetType *n = buildNet<NetType>(buildTestName);
+    SSPSolver<NetType > solver;
+    SSPSolver<NetType >::Solution sol(*n);
     //cout<<*n<<std::endl;    
-    std::cout<<"Starting solver"<<std::endl;
     solver.solve(*n);
-    std::cout<<"Getting solution..."<<std::endl;
     int x=solver.getSolution(*n,sol);
-    std::cout<<"Solver got min cost of "<<x<<std::endl;
     if(x!=14)
         {
         ti->failItem(__SPOT__);
@@ -124,7 +135,9 @@ static void test1()
 int SSPSolverTest(TestBed &myBed)
 {
     TestItem::setBed(&myBed);
-    test1();
+    SSPSolverTest1<MyNetType>("SSPSolverTest:01:build and solve one MCF problem:StaticNet");
+    SSPSolverTest1<MyNetType2>("SSPSolverTest:01:build and solve one MCF problem:DynNet");
+    SSPSolverTest1<MyNetType3>("SSPSolverTest:01:build and solve one MCF problem:StaticFBNet");
     return 0;
 }
 

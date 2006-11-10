@@ -5,16 +5,18 @@
 */
 #include <PathFind.h>
 #include <StaticNet.h>
+#include <StaticFBNet.h>
 #include <DynNet.h>
 
 #include "TestItem.h"
 #include "TestBed.h"
+#include <string>
 
 typedef int NodeType;
 typedef int ArcType;
 typedef StaticNet<NodeType,ArcType> MyNetType;
-//typedef DynNet<NodeType,ArcType> MyNetType;
-typedef PathFind<MyNetType> PathFinder;
+typedef DynNet<NodeType,ArcType> MyNetType2;
+typedef StaticFBNet<NodeType,ArcType> MyNetType3;
 
 std::ostream &operator<<(std::ostream &os, const MyNetType &net)
 {
@@ -41,7 +43,8 @@ std::ostream &operator<<(std::ostream &os, const JustPaths &paths)
 }
 */
 
-void buildSimpleNet(MyNetType &netToFill)
+template <class NetType >
+void buildSimpleNet(NetType &netToFill)
 {
   netToFill.insert(0);
   netToFill.insert(1);
@@ -57,20 +60,20 @@ void buildSimpleNet(MyNetType &netToFill)
   netToFill.arc_insert(netToFill.find(2),0,netToFill.find(5));
   netToFill.arc_insert(netToFill.find(3),0,netToFill.find(4));
   netToFill.arc_insert(netToFill.find(4),0,netToFill.find(5));
-  std::cout<<netToFill<<std::endl;
+  //std::cout<<netToFill<<std::endl;
 }
-
-static void test1()
+template <class NetType>
+void findPathTest(const std::string &testName)
 {
-  TestItem *ti = new TestItem("PathFindTest:1:Find all paths in a staticNet");
-  MyNetType myNet(100,100);
+  TestItem *ti = new TestItem(testName.c_str());
+  NetType myNet(100,100);
   buildSimpleNet(myNet);
-  MyNetType::iterator backOne = myNet.end();
+  NetType::iterator backOne = myNet.end();
   backOne--;
-  PathFinder myFind(myNet,myNet.begin(),backOne);
+  PathFind<NetType> myFind(myNet,myNet.begin(),backOne);
   JustPaths paths;
   myFind.getPaths(paths);
-  std::cout<<paths<<std::endl;
+  //std::cout<<paths<<std::endl;
   if(paths.size()!=4)
     ti->failItem(__SPOT__);
   else
@@ -80,6 +83,8 @@ static void test1()
 int PathFindTest(TestBed &myBed)
 {
   TestItem::setBed(&myBed);
-  test1();
+  findPathTest<MyNetType>("PathFindTest:1:Find all paths :StaticNet");
+  findPathTest<MyNetType2>("PathFindTest:1:Find all paths :DynNet");
+  findPathTest<MyNetType3>("PathFindTest:1:Find all paths :StaticFBNet");
   return 0;
 }

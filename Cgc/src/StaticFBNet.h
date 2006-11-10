@@ -139,42 +139,49 @@ public:
     //typedef const SFBNArcType<NodeInfo,ArcInfo> * const const_iterator;
     typedef SFBNArcType<NodeInfo,ArcInfo> * const_iterator;
     typedef BackArcIterator<NodeInfo,ArcInfo> back_iterator;
-    //typedef BackArcIterator<NodeInfo,ArcInfo> const_back_iterator;
+    typedef BackArcIterator<NodeInfo,ArcInfo> const_back_iterator;
   
   
     size_t size()const{ return numArcs;}
     size_t back_size()const{ return backArcs.size();}
   
-    iterator begin(){ return base; }
-    const_iterator begin()const { return base; }
-    iterator end(){ return base + numArcs; }
+    iterator begin()
+    { 
+        return base; 
+    }
+    const_iterator begin()const 
+    { 
+        return base; 
+    }
+    iterator end()
+    { 
+        return base + numArcs; 
+    }
     const_iterator end()const { return base + numArcs; }
   
     back_iterator back_begin(){ return backArcs.begin(); }
-    /*
-      const_back_iterator back_begin()const 
+    const_back_iterator back_begin()const 
       { 
+          SFBNNodeType *nonConstThis = const_cast<SFBNNodeType *>(this);
       const_back_iterator cbi;
-      cbi = backArcs.begin();
+      cbi = nonConstThis->backArcs.begin();
       return cbi;
       }
-    */
     back_iterator back_end()
     { 
         back_iterator retVal = backArcs.end(); 
         return retVal;
     }
-    /*
       const_back_iterator back_end()const 
       { 
       const_back_iterator backEnd;
-      backEnd = backArcs.end();
+          SFBNNodeType *nonConstThis = const_cast<SFBNNodeType *>(this);
+      backEnd = nonConstThis->backArcs.end();
       return backEnd;
       //return backArcs.end();
-      const_back_iterator retVal = backArcs.end(); 
-      return retVal;
+      //const_back_iterator retVal = nonConstthis->backArcs.end(); 
+      //return retVal;
       }
-    */
   
     reverse_iterator rbegin(){ return base+numArcs-1; }
     //const_reverse_iterator rbegin()const { return base+numArcs-1; }
@@ -223,6 +230,14 @@ public:
     typedef typename SFBNNodeBag::iterator SFBNNodeBagIter;
     typedef typename SFBNNodeBag::const_iterator SFBNNodeBagConstIter;
 };
+
+
+template <class NodeInfo, class ArcInfo >
+bool operator==(const typename SFBNetNodeTypes<NodeInfo,ArcInfo>::SFBNNodeBag::iterator &iter1, 
+                const typename SFBNetNodeTypes<NodeInfo,ArcInfo>::SFBNetNodeTypes::SFBNNodeBag::iterator &iter2)
+{
+    return iter1 == iter2;
+}
 
 /// @ingroup EXPERIMENTAL
 template< class NodeInfo, class ArcInfo>
@@ -390,7 +405,10 @@ public :
   
     SFBNetConstArcIterator(NetType &thenet)
     :net(&thenet),nodeIter(net->begin())
-    { if(net->begin()!=net->end()) arcIter=(*nodeIter).begin(); }
+    { 
+        if(net->begin()!=net->end()) 
+            arcIter=(*nodeIter).begin(); 
+    }
   
     SFBNetConstArcIterator(const SFBNetArcIterator< NetType, NodeInfo, ArcInfo > &otherIter)
     :net(otherIter.net),nodeIter(otherIter.nodeIter), arcIter(otherIter.arcIter){}
@@ -582,15 +600,22 @@ public:
   
     arc_iterator arc_begin() 
     {
-        return arc_iterator(*this,
-                            begin(),
-                            (*(begin())).begin());
+        return arc_iterator(*this);
     }
     const_arc_iterator arc_begin()const
-    { return const_arc_iterator(*this,begin(),arcs.begin()); }
+    { 
+        StaticFBNet &nonConstThisRef = const_cast<StaticFBNet &>(*this);
+        iterator node =nonConstThisRef.begin();
+        while(node!=end()&&(*node).size()==0)
+        {
+            node++;
+        }
+        SFBNetConstArcIterator<StaticFBNet,NodeInfo,ArcInfo> retIt(nonConstThisRef,node);
+        return retIt;
+    }
     arc_iterator arc_end() 
     {
-        return arc_iterator(*this,end(),&(arcs[currentNumArcs]));
+        return arc_iterator(*this,end());
         //return arc_iterator(const_cast<StaticFBNet &>(*this),end(),&(arcs[currentNumArcs]));
     }
     const_arc_iterator arc_end()const
@@ -598,8 +623,10 @@ public:
         StaticFBNet &nonConstThisRef = const_cast<StaticFBNet &>(*this);
         return const_arc_iterator(nonConstThisRef,
                           nonConstThisRef.end(),
-                          const_cast<SFBNArcType<NodeInfo,ArcInfo> *>(
-                                                                      &(arcs[currentNumArcs]))); }
+                          NULL);
+    }
+                          //const_cast<SFBNArcType<NodeInfo,ArcInfo> *>(
+                            //                                          &(arcs[currentNumArcs]))); }
   
     /*
       arc_reverse_iterator arc_rbegin() { return arcs.rbegin(); }
@@ -614,6 +641,7 @@ public:
     iterator insert(const NodeInfo &nodeData)
     { 
         Node newNode(nodeData);
+        assert(currentNumNodes < hintNodes);
         nodes[currentNumNodes] = newNode;
         iterator it = begin();
         advance(it,currentNumNodes);
@@ -625,10 +653,11 @@ public:
                             const ArcInfo &info,
                             const iterator &headNode)
     {
+        assert(currentNumArcs<arcs.size());
         if((cacheLastInsert==NULL)||(cacheLastInsert<=&(*tailNode)))
             {
             cacheLastInsert = &(*tailNode);
-            arcs.insert(arcs.end(),Arc(info,headNode,tailNode));
+            //arcs.insert(arcs.end(),Arc(info,headNode,tailNode));
             arcs[currentNumArcs]=Arc(info,headNode,tailNode);
             (*tailNode).insert(&(arcs[currentNumArcs]));
             currentNumArcs++;
@@ -653,10 +682,18 @@ public:
     { iterator it = begin();
     advance(it,id.getNodeId());
     return it; }
-    const_iterator find(const Cgc::NodeId &id)const{ return &(nodes[id.getNodeId()]); }
+    const_iterator find(const Cgc::NodeId &id)const
+    { 
+        const_iterator retVal = begin();
+        std::advance(retVal,id.getNodeId());
+        return retVal;
+        //return &(nodes[id.getNodeId()]); 
+    }
     
     iterator find(const NodeInfo &info)
-    {return std::find(nodes.begin(),nodes.end(),Node(info));}
+    {
+        return std::find(nodes.begin(),nodes.end(),Node(info));
+    }
   
     arc_iterator arc_find(const_iterator  &nodeIter, const ArcInfo &info)
 #ifdef GNU_LOST_CONST_HACK
@@ -695,6 +732,21 @@ public:
             }
         return arc_end();
     }
+    arc_iterator arc_find(const Cgc::NodeId &nodeTail,
+                                const Cgc::NodeId &nodeHead)
+    {
+        StaticFBNet &nonConstThisRef = const_cast<StaticFBNet &>((*this));
+        
+        iterator tail = nonConstThisRef[nodeTail];
+        arc_iterator s(nonConstThisRef,tail,(*tail).begin());
+        arc_iterator e(const_cast<StaticFBNet &>((*this)),tail,(*tail).end());
+        for(arc_iterator arcIt= s; arcIt!=e;arcIt++)
+            {
+            if((*arcIt).head()==(*this)[nodeHead] )
+                return arcIt;
+            }
+        return arc_end();
+    }
   
   
     arc_iterator arc_find(const ArcInfo &info)
@@ -704,7 +756,11 @@ public:
     size_t arc_size()const{ return currentNumArcs;}
   
     Cgc::NodeId getNodeId(const const_iterator &nodeIter)const
-    {return Cgc::NodeId(((int)(&(*nodeIter) -&(nodes[0]))));}
+    {
+        const const_iterator beg(begin());
+        return Cgc::NodeId(std::distance(beg,nodeIter));
+        //return Cgc::NodeId(((int)(&(*nodeIter) -&(nodes[0]))));
+    }
     friend class SFBNetConstArcIterator< StaticFBNet<NodeInfo,ArcInfo>,
                                          NodeInfo, ArcInfo >;
     friend class SFBNetArcIterator< StaticFBNet<NodeInfo,ArcInfo>,
@@ -758,7 +814,32 @@ std::ostream &operator<<(std::ostream &os, const SFBNArcType<NodeInfo, ArcInfo >
 { 
     return os<<"SFBNArcType:"<<">"<<*arc<<'<'; 
 }
-};
 
+    template <class NodeInfo, class ArcInfo>
+    inline std::ostream &operator<<(std::ostream &os, 
+        const StaticFBNet<NodeInfo,ArcInfo> &net)
+    {
+        os<<"OutputNet["<<net.size()<<','<<net.arc_size()<<"]"<<std::endl;
+        /*  */
+        typename StaticFBNet<NodeInfo,ArcInfo>::const_iterator last = net.end();
+        for(typename StaticFBNet<NodeInfo,ArcInfo>::const_iterator cNodeIt = 
+            net.begin();
+            cNodeIt != last;cNodeIt++)
+        { 
+            os<<"Node "<<net.getNodeId(cNodeIt)<<" with "<<(*cNodeIt).size()<<" arcs out and "
+                <<(*cNodeIt).back_size()<<" arcs in"<<std::endl;
+        }
+        for(typename StaticFBNet<NodeInfo,ArcInfo>::const_arc_iterator cArcIt = 
+            net.arc_begin();
+            cArcIt != net.arc_end();cArcIt++)
+        { 
+            os<<*cArcIt<<" 0---+ "<<net.getNodeId((*cArcIt).tail())<<" +---+ "
+                <<net.getNodeId((*cArcIt).head())<<"+--->"<<std::endl; 
+        }
+        /*  */
+        return os;
+    }
+
+}
   
 #endif

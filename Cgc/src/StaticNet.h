@@ -10,6 +10,7 @@ All Rights Reserved.
 #include <algorithm>
 #include <NodeId.h>
 #include <iostream>
+#include <assert.h>
 
 namespace Cgc
 {
@@ -185,7 +186,7 @@ namespace Cgc
     {
     private:
         // ***data members***
-        const int hintArcsPerNode;
+        const int hintArcs;
         const int hintNodes;
         int currentNodeTop;
         int currentArcTop;
@@ -219,7 +220,7 @@ namespace Cgc
         the raw vectors that will hold the data.
         */
         StaticNet(const int estNodes, const int estArcs )
-            :hintArcsPerNode(estArcs),hintNodes(estNodes),
+            :hintArcs(estArcs),hintNodes(estNodes),
             currentNodeTop(0),currentArcTop(0),
             nodes(estNodes),
             cacheLastInsert(NULL)
@@ -281,6 +282,7 @@ namespace Cgc
         */
         iterator insert(const NodeInfo &nodeData)
         { 
+            assert(currentNodeTop < hintNodes);
             int thisNode=currentNodeTop;
             nodes[thisNode] = nodeData;
             iterator it = begin();
@@ -297,6 +299,7 @@ namespace Cgc
             const ArcInfo &info,
             iterator headNode)
         {
+            assert(currentArcTop < hintArcs);
             if((cacheLastInsert!=NULL)&&(cacheLastInsert!=&(*tailNode)))
             {
                 Node *pFirst = &(*begin());

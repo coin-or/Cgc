@@ -35,7 +35,7 @@ namespace Cgc
 
     @ingroup Algorithms
     */
-    template < class NetType , class NodeIterator >
+    template < class NetType , class Foo >
     class LayerSPSolver
     {
         typedef typename NetType::Node NetNode;
@@ -43,6 +43,7 @@ namespace Cgc
         typedef typename NetType::iterator NetIter;
         typedef typename NetNode::iterator NetNodeIter;
         typedef typename NetNode::back_iterator NetNodeBackIter;
+        typedef typename NetType::iterator NodeIterator;
         /** Internal representation of an element in the heap.
         @ingroup InternalUse
         */
@@ -213,8 +214,8 @@ namespace Cgc
             ArcPath< NetArc * > &pathToFill)const
         {
             pathToFill.erase(pathToFill.begin(),pathToFill.end());
-            NodeIterator thisNode = sink;
-            NodeIterator prevNode = thisNode;
+            typename NetType::const_iterator thisNode = sink;
+            typename NetType::const_iterator prevNode = thisNode;
             NodeId thisId = net.getNodeId(thisNode);
             pathToFill.setCost((*(*thisNode)).getLabel());
 

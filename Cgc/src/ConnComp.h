@@ -16,6 +16,20 @@ All Rights Reserved.
 
 namespace Cgc
 {
+    template< class Net >
+    class NodeIterNodeIdLess: public std::binary_function<typename Net::iterator,typename Net::iterator,bool>
+    { 
+    public:
+        NodeIterNodeIdLess(const Net &_net)
+            :net(_net)
+        {}
+        bool operator()(typename const Net::iterator &it1, typename const Net::iterator &it2)const
+        {
+            return net.getNodeId(it1) < net.getNodeId(it2);
+        }
+    private:
+        const Net &net;
+    };
 
     /** @brief Solver which finds bi-connected components in a graph.
         @ingroup Algorithms
@@ -47,7 +61,8 @@ public:
         NetIterator netEnd = net.end();
         std::list<NetIterator> nodeStack;
         std::list<NetIterator> pathStack;
-        std::set<NetIterator> visitedSet;
+        NodeIterNodeIdLess<Net> compObj(net);
+        std::set<NetIterator,NodeIterNodeIdLess<Net> > visitedSet(compObj);
         nodeStack.push_back(iter);
         while(nodeStack.size())
         {
@@ -67,10 +82,12 @@ public:
                 pathStack.push_back(iter); // diving, so add to pathStack
                 visitedSet.insert(iter);
                 nodeStack.push_back(netEnd);
-                std::cout<<"Visiting "<<net.getNodeId(iter)<<std::endl;
+                std::cout<<"Visiting "<<net.getNodeId(iter)<<" of "<<nodeStack.size()<<std::endl;
+                std::cout<<"   node has "<<(*iter).size()<<" arcs."<<std::endl;
                 for(typename Net::Node::iterator arcIt = (*iter).begin();
                     arcIt!=(*iter).end();arcIt++)
                 {
+                    std::cout<<"   +adding "<<net.getNodeId((*arcIt).head())<<std::endl;
                     nodeStack.push_back((*arcIt).head());
                 }
             }

@@ -5,18 +5,23 @@ All Rights Reserved.
 */
 #include "ConnComp.h"
 #include <StaticNet.h>
+#include <StaticFBNet.h>
+#include <DynNet.h>
 #include "TestItem.h"
 #include "TestBed.h"
 #include "TestData.h"
+#include <string>
 
 typedef StaticNet<NodeLabel,ArcCost> MyNet;
-typedef ConnComp<MyNet> MyConnComp;
+typedef DynNet<NodeLabel,ArcCost> MyNet2;
+typedef StaticFBNet<NodeLabel,ArcCost> MyNet3;
 
-void test1()
+template <class NetType>
+void test1(const std::string &testName)
 {
-    TestItem *ti=new TestItem("ConnComp:Simple Construction");
-    ConnComp<MyNet> *pConnCompConstruction = 
-        new ConnComp<MyNet>;
+    TestItem *ti=new TestItem(testName.c_str());
+    ConnComp<NetType> *pConnCompConstruction = 
+        new ConnComp<NetType>;
     delete pConnCompConstruction;
     ti->passItem();
 }
@@ -36,7 +41,8 @@ void printResult(CompCollection &comps)
 }
 
 
-void netConstruction(MyNet &net)
+template <class NetType>
+void netConstruction(NetType &net)
 {
     //
     // three nodes in a cycle.
@@ -44,25 +50,33 @@ void netConstruction(MyNet &net)
     NodeLabel zero;
     NodeLabel one;
     NodeLabel two;
-    MyNet::iterator zeroIter = net.insert(zero);
-    MyNet::iterator oneIter = net.insert(one);
-    MyNet::iterator twoIter = net.insert(two);
+    NetType::iterator zeroIter = net.insert(zero);
+    std::cout<<"net="<<net<<std::endl;
+    NetType::iterator oneIter = net.insert(one);
+    std::cout<<"net="<<net<<std::endl;
+    NetType::iterator twoIter = net.insert(two);
+    std::cout<<"net="<<net<<std::endl;
     ArcCost arcZero;
+    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(zeroIter,arcZero,oneIter);
+    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(zeroIter,arcZero,twoIter);
+    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(oneIter,arcZero,twoIter);
+    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(twoIter,arcZero,zeroIter);
-
+    std::cout<<"net="<<net<<std::endl;
 }
 
 
-void test2()
+template <class NetType>
+void test2(const std::string &testName)
 {
-    TestItem *ti=new TestItem("ConnComp:Simple Network solve");
-    MyNet net(3,5);
-    netConstruction(net);
+    TestItem *ti=new TestItem(testName.c_str());
+    NetType net(3,5);
+    netConstruction<NetType>(net);
 
-    MyConnComp connComp;;
+    ConnComp<NetType> connComp;
 
     CompCollection comps;
 
@@ -83,7 +97,9 @@ void test2()
     //printResult(comps);
     ti->passItem();
 }
-void netConstruction2(MyNet &net)
+
+template <class NetType>
+void netConstruction2(NetType &net)
 {
     //
     // three nodes in a cycle.
@@ -91,10 +107,10 @@ void netConstruction2(MyNet &net)
     NodeLabel zero;
     NodeLabel one;
     NodeLabel two;
-    MyNet::iterator zeroIter = net.insert(zero);
-    MyNet::iterator oneIter = net.insert(one);
-    MyNet::iterator twoIter = net.insert(two);
-    MyNet::iterator threeIter = net.insert(two);
+    NetType::iterator zeroIter = net.insert(zero);
+    NetType::iterator oneIter = net.insert(one);
+    NetType::iterator twoIter = net.insert(two);
+    NetType::iterator threeIter = net.insert(two);
     ArcCost arcZero;
     net.arc_insert(zeroIter,arcZero,oneIter);
     net.arc_insert(zeroIter,arcZero,twoIter);
@@ -105,20 +121,21 @@ void netConstruction2(MyNet &net)
 }
 
 
-void test3()
+template <class NetType>
+void test3(const std::string &testName)
 {
-    TestItem *ti=new TestItem("ConnComp:Bigger net, samne answer.");
-    MyNet net(4,6);
+    TestItem *ti=new TestItem(testName.c_str());
+    NetType net(4,6);
     netConstruction2(net);
-
-    MyConnComp connComp;;
+    ConnComp<NetType> connComp;
 
     CompCollection comps;
-
-    bool bResult = connComp.solve( comps,
+    bool bResult = false;
+    bResult = connComp.solve( comps,
         net,
         net.begin(),
         net.end());
+
     if(bResult!=true)
         ti->failItem(__SPOT__);
     if(comps.size()!=2)
@@ -137,10 +154,14 @@ int ConnCompTest(TestBed &myBed)
 {
     TestItem::setBed(&myBed);
 
-    std::cout<<"Testing StaticNet with ConnComp"<<std::endl;
-    test1();
-    test2();
-    test3();
-    std::cout<<"\n----<All tests complete>----\n"<<std::endl;
+//    test1<MyNet>("ConnComp:Simple Construction:StaticNet");
+//    test1<MyNet2>("ConnComp:Simple Construction:DynNet");
+    test1<MyNet3>("ConnComp:Simple Construction:StaticFBNet");
+//    test2<MyNet>("ConnComp:Simple Network solve:StaticNet");
+//    test2<MyNet2>("ConnComp:Simple Network solve:DynNet");
+    test2<MyNet3>("ConnComp:Simple Network solve:StaticFBNet");
+//    test3<MyNet>("ConnComp:Bigger net, same answer.:StaticNet");
+//    test3<MyNet2>("ConnComp:Bigger net, same answer.:DynNet");
+    test3<MyNet3>("ConnComp:Bigger net, same answer.:StaticFBNet");
     return 0;
 }

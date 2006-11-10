@@ -1,80 +1,109 @@
 /*
-  Author: H. Philip Walton
-  Copyright (C) 2006 H. Philip Walton
-  All Rights Reserved.
+Author: H. Philip Walton
+Copyright (C) 2006 H. Philip Walton
+All Rights Reserved.
 */
 #include <iostream>
-
+#include <sstream>
 #include <StaticNet.h>
+#include <StaticFBNet.h>
 #include <DynNet.h>
 #include <DFTraversal.h>
 #include "TestBed.h"
 
 typedef DynNet<int,int> MyNetType;
-typedef StaticNet<int,int> MyNetType3;
+typedef StaticNet<int,int> MyNetType2;
+typedef StaticFBNet<int,int> MyNetType3;
 
 template < class MyNetType >
 void buildNet(MyNetType &netToFill)
 {
-  typedef typename MyNetType::iterator NetIter;
-  NetIter nit0=netToFill.insert(1); //nodeId0
-  NetIter nit1=netToFill.insert(2); //nodeId1
-  NetIter nit2=netToFill.insert(4); //nodeId2
-  NetIter nit3=netToFill.insert(8); //nodeId3
-  netToFill.arc_insert(nit0,
-		       16,
-		       nit1);
-  netToFill.arc_insert(nit0,
-		       32,
-		       nit2);
-  netToFill.arc_insert(nit0,
-		       64,
-		       nit3);
-  netToFill.arc_insert(nit1,
-		       128,
-		       nit2);
-  netToFill.arc_insert(nit1,
-		       256,
-		       nit3);
-  netToFill.arc_insert(nit2,
-		       512,
-		       nit3);
+    typedef typename MyNetType::iterator NetIter;
+    NetIter nit0=netToFill.insert(1); //nodeId0
+    NetIter nit1=netToFill.insert(2); //nodeId1
+    NetIter nit2=netToFill.insert(4); //nodeId2
+    NetIter nit3=netToFill.insert(8); //nodeId3
+    netToFill.arc_insert(nit0,
+        16,
+        nit1);
+    netToFill.arc_insert(nit0,
+        32,
+        nit2);
+    netToFill.arc_insert(nit0,
+        64,
+        nit3);
+    netToFill.arc_insert(nit1,
+        128,
+        nit2);
+    netToFill.arc_insert(nit1,
+        256,
+        nit3);
+    netToFill.arc_insert(nit2,
+        512,
+        nit3);
 }
 
+template < class MyNetType >
+bool checkResult(MyNetType &traversedNet)
+{
+    for(MyNetType::iterator nodeIt = traversedNet.begin();
+        nodeIt!=traversedNet.end();nodeIt++)
+    {
+        switch(traversedNet.getNodeId(nodeIt).getNodeId())
+        {
+        case 0:
+            if(*(*nodeIt)!=2)
+                return false;
+            break;
+        case 1:
+            if(*(*nodeIt)!=3)
+                return false;
+            break;
+        case 2:
+            if(*(*nodeIt)!=6)
+                return false;
+            break;
+        case 3:
+            if(*(*nodeIt)!=12)
+                return false;
+            break;
+        default:
+            return false;
+        }
+    }
+    return true;
+}
+
+static int i;
+template < class NetType >
+void testDFT()
+{
+    std::stringstream testName;
+    testName<<"DFT test:"<<i++;
+    TestItem *ti = new TestItem(testName.str().c_str());
+    NetType net(100,100);
+    buildNet<NetType>(net);
+
+    DFTraversal<NetType> traveler(net);
+
+    for(traveler = net.begin();
+        traveler != net.end(); traveler++)
+    {
+        (*(*(*traveler)))++;
+    }
+    if(!checkResult(net))
+    {
+        ti->failItem(__SPOT__);
+    }
+    ti->passItem();
+}	
 
 int DFTraversalTest(TestBed &myBed)
 {
-  std::cout<<"Testing DynNet"<<std::endl;
-  MyNetType net(100,100);
-  buildNet<MyNetType>(net);
+    TestItem::setBed(&myBed);
+    testDFT<MyNetType>();
+    testDFT<MyNetType2>();
+    testDFT<MyNetType3>();
 
-  DFTraversal<MyNetType> traveler(net);
-
-  for(traveler = net.begin();
-      traveler != net.end(); traveler++)
-    std::cout<<" at node "<<net.getNodeId(*traveler)<<std::endl;
-	
-/*
-  std::cout<<"Testing StaticNet"<<std::endl;
-  MyNetType2 net2(100,100);
-  buildNet<MyNetType2>(net2);
-  DFTraversal<MyNetType2> traveler2(net2);
-
-  for(traveler2 = net2.begin();
-      traveler2 != net2.end(); traveler2++)
-    std::cout<<" at node "<<net2.getNodeId(*traveler2)<<std::endl;
-
-*/
-
-  std::cout<<"Testing StaticFBNet"<<std::endl;
-  MyNetType3 net3(100,100);
-  buildNet<MyNetType3>(net3);
-  DFTraversal<MyNetType3> traveler3(net3);
-
-  for(traveler3 = net3.begin();
-      traveler3 != net3.end(); traveler3++)
-    std::cout<<" at node "<<net3.getNodeId(*traveler3)<<std::endl;
-
-  std::cout<<"Not a real test, but suffices"<<std::endl;
-  return 0;
+    return 0;
 }

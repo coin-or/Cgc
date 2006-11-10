@@ -229,17 +229,7 @@ static void test6()
       item1->failItem(__SPOT__);
     }
   //cout<<"6.4"<<std::endl;
-  /*
-  MyNetType::reverse_iterator nodeCRIt = net.rbegin();
-  if(compareToOne(nodeCRIt))
-    {
-      const MyNetType::Node &nodeRef = (*nodeIt);
-      cout<<"On failure is :";
-      nodeRef.print(cout);
-      cout<<std::endl;
-      item1->failItem(__SPOT__);
-    }
-  */
+
 }
 
 static void test7()
@@ -395,7 +385,7 @@ static void test10()
 {
   TestItem *ti = new TestItem("StaticFBNetTest:10:Arc Iterators 3 ");
 
-  MyNetType net(2,1);
+  MyNetType net(3,2);
   buildBasicNet(net);
   NodeLabel two(2);
   MyNetType::iterator node2= net.insert(two);
@@ -498,9 +488,9 @@ void buildBiggerNet(MyNetType &netToFill)
 
 static void test14()
 {
-    //TestItem *item1 = new TestItem("14:Test Node's Back Arc Iterators");
+  TestItem *item1 = new TestItem("14:Test Node's Back Arc Iterators");
 
-  /*
+  
   MyNetType net(2,1);
   buildBasicNet(net);
 
@@ -526,7 +516,6 @@ static void test14()
 	}
     }
   item1->passItem();
-  */
 }
 
 static void test15()
@@ -652,9 +641,6 @@ int StaticFBNetTest(TestBed &myBed)
   test8(); 
   test9(); 
   test10();
-  //deletes a node test11();std::cout<<"\n---------------===Finished 11===---------------"<<std::endl;
-  //deletes an arc test12();std::cout<<"\n---------------===Finished 12===---------------"<<std::endl;
-  // save/load test13();std::cout<<"\n---------------===Finished 13===---------------"<<std::endl;
   test14();
   test15();
   test16();
