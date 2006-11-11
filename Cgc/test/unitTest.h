@@ -26,4 +26,7 @@ int SPTestDataTest(TestBed &bed);
 int SSPSolverTest(TestBed &bed);
 int StaticFBNetTest(TestBed &bed);
 int StaticNetTest(TestBed &bed);
+void DotOutputFormatTest(TestBed &bed);
+
+
 #endif

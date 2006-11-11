@@ -18,6 +18,7 @@ Cgc/src/ConnComp.h -text
 Cgc/src/DFTraversal.h -text
 Cgc/src/DijkSolver.h -text
 Cgc/src/DynNet.h -text
+Cgc/src/GraphDotFormat.h -text
 Cgc/src/LayerSPSolver.h -text
 Cgc/src/MSTSolver.h -text
 Cgc/src/NodeCostComp.h -text
@@ -32,6 +33,7 @@ Cgc/src/StaticNet.h -text
 Cgc/test/BFTraversalTest.cc -text
 Cgc/test/ConnCompTest.cc -text
 Cgc/test/DFTraversalTest.cc -text
+Cgc/test/DotOutputFormatTest.cpp -text
 Cgc/test/DynNetTest.cc -text
 Cgc/test/LayerSPTest.cc -text
 Cgc/test/MSTData.cc -text

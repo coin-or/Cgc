@@ -28,6 +28,7 @@ int main()
         SPStaticFBTest(myBed);
         SSPSolverTest(myBed);
         StaticFBNetTest(myBed);
+        DotOutputFormatTest(myBed);
     }
     return 0;
 }
