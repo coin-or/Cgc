@@ -82,24 +82,24 @@ public:
                 pathStack.push_back(iter); // diving, so add to pathStack
                 visitedSet.insert(iter);
                 nodeStack.push_back(netEnd);
-                std::cout<<"Visiting "<<net.getNodeId(iter)<<" of "<<nodeStack.size()<<std::endl;
-                std::cout<<"   node has "<<(*iter).size()<<" arcs."<<std::endl;
+                //std::cout<<"Visiting "<<net.getNodeId(iter)<<" of "<<nodeStack.size()<<std::endl;
+                //std::cout<<"   node has "<<(*iter).size()<<" arcs."<<std::endl;
                 for(typename Net::Node::iterator arcIt = (*iter).begin();
                     arcIt!=(*iter).end();arcIt++)
                 {
-                    std::cout<<"   +adding "<<net.getNodeId((*arcIt).head())<<std::endl;
+                    //std::cout<<"   +adding "<<net.getNodeId((*arcIt).head())<<std::endl;
                     nodeStack.push_back((*arcIt).head());
                 }
             }
             else
             {
-                std::cout<<"Already visited node"<<net.getNodeId(iter)<<std::endl;
+                //std::cout<<"Already visited node"<<net.getNodeId(iter)<<std::endl;
                 foundAny=true;
                 Cgc::Component newComp;
                 for(typename std::list<NetIterator>::iterator lnii = pathStack.begin();lnii!=pathStack.end();lnii++)
                 {
                     newComp.insert(net.getNodeId((*lnii)));
-                    std::cout<<" pathStack has"<<net.getNodeId((*lnii))<<std::endl;
+                    //std::cout<<" pathStack has"<<net.getNodeId((*lnii))<<std::endl;
                 }
                 containerToFill.insert(newComp);
             }

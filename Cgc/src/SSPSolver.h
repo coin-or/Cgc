@@ -69,10 +69,10 @@ inline std::ostream &operator<<(std::ostream &os, const MCFNodeData &nd)
    @ingroup Algorithms
    @see SSPSolver
  */
-class ArcData
+class MCFArcData
 {
 public:
-    ArcData(int cVal, int rVal,bool isValid)
+    MCFArcData(int cVal, int rVal,bool isValid)
     :c(cVal),r(rVal),
      x(0),
      bValid(isValid)
@@ -82,12 +82,13 @@ public:
         else
             cPi=0;
     }
-    ArcData()
+    MCFArcData()
     :c(0),cPi(0),r(0),
      x(0),
      bValid(true)
     { }
     int getC()const{ return c;}
+    void setC(int newC){ c=newC;}
     int getCPi()const{ return cPi;}
     int getR()const{ return r;}
     void setR(int newR){ r=newR;}
@@ -110,7 +111,7 @@ private:
     @ingroup InternalUse
    @see SSPSolver
 */
-inline std::ostream &operator<<(std::ostream &os, const ArcData &ad)
+inline std::ostream &operator<<(std::ostream &os, const MCFArcData &ad)
 {
     os<<"o-(C="<<ad.getC()<<",CPi="<<ad.getCPi()<<",r="<<ad.getR()<<" x="<<ad.getX()<<")->";
     return os;
@@ -220,10 +221,11 @@ public:
         IntSet D;
         for(unsigned cnt=0;cnt<net.size();cnt++)
             {
-            if((*(*net.find(cnt))).getE()>0)
+                NetType::Node &node = (*net.find(NodeId(cnt)));
+            if((*node).getE()>0)
                 E.insert(cnt);
             else
-                if((*(*net.find(cnt))).getE()<0)
+                if((*(*net.find(NodeId(cnt)))).getE()<0)
                     D.insert(cnt);
             }
         while(E.size())
@@ -242,7 +244,7 @@ public:
             // solve all node shortest path.
             DijkSolver<NetType, typename NetType::iterator> solver;
             Cgc::Path pathToFill;
-            typename NetType::iterator s= net.find(k);
+            typename NetType::iterator s= net.find(NodeId(k));
             solver.solve(net, s);
             // get the k-l shortest path.
             solver.getPath(net, net.find(Cgc::NodeId(l)),pathToFill);
@@ -275,7 +277,7 @@ public:
                     d=arcRVal;
                 }
             // compute gamma as min of source, sink, or d 
-            typename NetType::iterator t = net.find(l);
+            typename NetType::iterator t = net.find(NodeId(l));
             // @TODO the following const_casts should not be necessary (gcc3.x)
             typename NetType::Node &nS = const_cast<typename NetType::Node &>(*s);
             typename NetType::Node &nT = const_cast<typename NetType::Node &>(*t);
@@ -294,10 +296,11 @@ public:
                                                          pathToFill[cnt+1]);
                 typename NetType::arc_iterator itsReverseArc=net.arc_find(pathToFill[cnt+1],
                                                                  pathToFill[cnt]);
-                ArcData &ad = (*(*anArc));
+                assert(itsReverseArc!=net.arc_end()); // this solver requires both dirs.
+                MCFArcData &ad = (*(*anArc));
                 int arcRVal = ad.getR();
                 ad.incrX(gam);
-                ArcData &adReverse = (*(*itsReverseArc));
+                MCFArcData &adReverse = (*(*itsReverseArc));
                 int adReverseRVal = adReverse.getR();
                 adReverse.incrX(-gam);
             
@@ -330,14 +333,15 @@ public:
             for(typename NetType::iterator nodeIt = net.begin();
                 nodeIt!=net.end();nodeIt++)
                 {
-                int tailPi= (*(*nodeIt)).getPi();
+                    NetType::Node &node = (*nodeIt);
+                int tailPi= (*node).getPi();
                 for(typename NodeType::iterator ai=(*nodeIt).begin();
                     ai!=(*nodeIt).end();ai++)
                     {
                     if((*(*ai)).valid())
                         {
                         int headPi = (*(*(*ai).head())).getPi();
-                        ArcData &ad = (*(*ai));
+                        MCFArcData &ad = (*(*ai));
                         int newCPi = ad.getC()-tailPi+headPi;
                     
                         ad.setCPi(newCPi);

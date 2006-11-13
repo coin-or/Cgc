@@ -501,6 +501,8 @@ namespace Cgc
         typedef MyNodeBagIter const_iterator;
         typedef DynNetArcIterator<DynNet, NodeInfo, ArcInfo > const_arc_iterator;
         typedef DynNetArcIterator<DynNet, NodeInfo, ArcInfo  > arc_iterator;
+        typedef NodeInfo node_data;
+        typedef ArcInfo arc_data;
 
         DynNet(const int numNodes,const int numArcs)
             :idMgr(0),hintNodes(numNodes),hintArcs(numArcs),arcSize(0)
@@ -806,7 +808,7 @@ namespace Cgc
                 }
             }
             idMgr.setMaxId(maxId);
-            is.getline(buffer,20);
+            is>>buffer;
             if(strncmp(buffer,"Undir:Done",10))
                 std::cerr<<"Didn't get the last line right!"<<std::endl;
             return is;

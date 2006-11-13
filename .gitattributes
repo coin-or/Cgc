@@ -17,6 +17,7 @@ Cgc/src/Component.h -text
 Cgc/src/ConnComp.h -text
 Cgc/src/DFTraversal.h -text
 Cgc/src/DijkSolver.h -text
+Cgc/src/DimacsNetFlowReader.h -text
 Cgc/src/DynNet.h -text
 Cgc/src/GraphDotFormat.h -text
 Cgc/src/LayerSPSolver.h -text
