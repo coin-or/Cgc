@@ -15,7 +15,7 @@ int main()
         DFTraversalTest(myBed);
         StaticNetTest(myBed);
         DynNetTest(myBed);
-        LayerSPTest(myBed);
+        LayerSPTest(myBed);     
         MSTDataTest(myBed);
         MSTTest(myBed);
         NodeIdTest(myBed);
@@ -29,6 +29,7 @@ int main()
         SSPSolverTest(myBed);
         StaticFBNetTest(myBed);
         DotOutputFormatTest(myBed);
+        ReadDimacsTest(myBed);
     }
     return 0;
 }

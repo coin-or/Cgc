@@ -500,8 +500,8 @@ static void test13()
        header==myStaticSPNet.end())
         ti->failItem(__SPOT__);
   
-    std::cout<<"*(*tail)="<<*(*tail)<<std::endl;
-    std::cout<<"*(*header)="<<*(*header)<<std::endl;
+    //std::cout<<"*(*tail)="<<*(*tail)<<std::endl;
+    //std::cout<<"*(*header)="<<*(*header)<<std::endl;
     ArcCost cost(1);
   
     MyNetType::arc_iterator arc5It= 
@@ -547,36 +547,36 @@ static void test15()
         mnci!= myNet.end();mnci++)
         {
         NodeId id=myNet.getNodeId(mnci);
-        std::cout<<"From Node "<<id<<" with data ="<<*(*mnci)<<std::endl;
+        //std::cout<<"From Node "<<id<<" with data ="<<*(*mnci)<<std::endl;
         for(MyNetType::const_arc_iterator mncai = (*mnci).begin();
             mncai != (*mnci).end();++mncai)
             {
-            std::cout<<" Reaching to "<<myNet.getNodeId((*mncai).head())
-                <<" with arc data "<<*(*mncai)<<std::endl;
+            //std::cout<<" Reaching to "<<myNet.getNodeId((*mncai).head())
+                //<<" with arc data "<<*(*mncai)<<std::endl;
             }
         }
     for(MyNetType::iterator mnci = myNet.begin();
         mnci!= myNet.end();mnci++)
         {
         NodeId id=myNet.getNodeId(mnci);
-        std::cout<<"From Node "<<id<<" with data ="<<*(*mnci)<<std::endl;
+        //std::cout<<"From Node "<<id<<" with data ="<<*(*mnci)<<std::endl;
         for(MyNetType::const_arc_iterator mncai = (*mnci).begin();
             mncai != (*mnci).end();mncai++)
             {
-            std::cout<<"Visiting to "<<myNet.getNodeId((*mncai).head())
-                <<" with arc data "<<*(*mncai)<<std::endl;
+           // std::cout<<"Visiting to "<<myNet.getNodeId((*mncai).head())
+                //<<" with arc data "<<*(*mncai)<<std::endl;
             }
         }
     for(MyNetType::iterator mnci = myNet.begin();
         mnci!= myNet.end();mnci++)
         {
         NodeId id=myNet.getNodeId(mnci);
-        std::cout<<"From Node "<<id<<" with data ="<<*(*mnci)<<std::endl;
+        //std::cout<<"From Node "<<id<<" with data ="<<*(*mnci)<<std::endl;
         for(MyNetType::const_arc_iterator mncai = (*mnci).begin();
             mncai != (*mnci).end();mncai++)
             {
-            std::cout<<"Visiting to "<<myNet.getNodeId((*mncai).head())
-                <<" with arc data "<<*(*mncai)<<std::endl;
+            //std::cout<<"Visiting to "<<myNet.getNodeId((*mncai).head())
+                //<<" with arc data "<<*(*mncai)<<std::endl;
             }
         }  
     ti->passItem();

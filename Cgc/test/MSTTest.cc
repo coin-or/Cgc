@@ -93,7 +93,6 @@ void test3()
   obs++;
   strcat(labelString,"MSTTest3:Multiple Node Insert");
   TestItem *ti=new TestItem(labelString);
-  ti->passItem();
   
   typedef typename MSTNet::Node MSTNode;
   typedef typename MSTNode::iterator MSTNodeIter;
@@ -128,23 +127,26 @@ void test3()
 			   MSTArcCost(1),
 			   node4);
 
-  printGraph(myStaticNet);
+  //printGraph(myStaticNet);
   
   MSTSolver<MSTNet> myTreeSolver;
 
   //std::cout<<"Calling solver now"<<std::endl;
   myTreeSolver.solve(myStaticNet );
   //std::cout<<"Solver done"<<std::endl;
-  printGraph(myStaticNet);
+  //printGraph(myStaticNet);
 
   typedef typename MSTSolver<MSTNet>::ArcIndex MSTArcList;
   //MSTSolver<MSTNet>::ArcIndex arcList;
   MSTArcList arcList;
 
   myTreeSolver.getArcIndex(arcList);
+  /*
   for(typename MSTArcList::iterator arcIt = arcList.begin();arcIt != arcList.end();
       arcIt++)
       dumpArcInfo<MSTNet> (myStaticNet,*arcIt);
+      */
+  ti->passItem();
 }
 template < class MSTNet>
 void test4()
@@ -154,7 +156,6 @@ void test4()
   obs++;
   strcat(labelString,"MSTTest4:Multiple Arc Inserts ");
   TestItem *ti=new TestItem(labelString);
-  ti->passItem();
   
   MSTNet myStaticNet(100,100);
   MSTNodeLabel tmp;
@@ -197,6 +198,7 @@ void test4()
       std::cout<<"Apparently has "<<myStaticNet.arc_size()<<" arcs."<<std::endl;
       ti->failItem(__SPOT__);
     }
+  ti->passItem();
 }
 
 template <class MSTNet>
@@ -344,7 +346,7 @@ void test7()
   MSTSolver<MSTNet> myTreeSolver;
   myTreeSolver.solve(myStaticNet );
   //std::cout<<"Solver done"<<std::endl;
-  printGraph(myStaticNet);
+ // printGraph(myStaticNet);
 
   typedef typename MSTSolver<MSTNet>::ArcIndex MSTArcList;
   MSTArcList arcList;
@@ -355,7 +357,7 @@ void test7()
   for(typename MSTArcList::iterator arcIt = arcList.begin();arcIt != arcList.end();
       arcIt++)
   {
-      dumpArcInfo(myStaticNet,*arcIt);
+      //dumpArcInfo(myStaticNet,*arcIt);
       cost += (*(*(*arcIt))).getCost();
   }
   if(cost != 108) // known answer to this problem
@@ -363,7 +365,7 @@ void test7()
       std::cout<<"ERROR: Cost is:"<<cost<<std::endl;
       ti->failItem(__SPOT__);
     }
-  std::cout<<"Total cost is:"<<cost<<std::endl;
+ // std::cout<<"Total cost is:"<<cost<<std::endl;
 }
 
 
@@ -372,7 +374,7 @@ int MSTTest(TestBed &myBed)
   TestItem::setBed(&myBed);
   
 #ifdef STATICFBTEST
-  std::cout<<"Testing StaticMSTNet"<<std::endl;
+ // std::cout<<"Testing StaticMSTNet"<<std::endl;
   test1<StaticMSTNet1>();
   test2<StaticMSTNet1>();
   test3<StaticMSTNet1>();
@@ -382,7 +384,7 @@ int MSTTest(TestBed &myBed)
   test7<StaticMSTNet1>();
 #endif
 #ifdef DYNTEST
-  std::cout<<"Testing DynNet"<<std::endl;
+  //std::cout<<"Testing DynNet"<<std::endl;
   test1<DynMSTNet2>();
   test2<DynMSTNet2>();
   test3<DynMSTNet2>();

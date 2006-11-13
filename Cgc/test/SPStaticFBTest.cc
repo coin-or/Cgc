@@ -59,12 +59,12 @@ static void test1()
   Path pathToFill;
   StaticDijkSPNet::iterator start=myStaticSPNet.begin();
   myShortSolver.solve(myStaticSPNet, start );
-  std::cout<<"Solve done"<<std::endl;
+  //std::cout<<"Solve done"<<std::endl;
   StaticDijkSPNet::iterator start2 = myStaticSPNet.find(NodeId(2));
   myShortSolver.getPath(myStaticSPNet, start2,pathToFill);
-  std::cout<<"Path gotten"<<std::endl;
-  std::cout<<pathToFill<<std::endl;
-  std::cout<<"Path printed"<<std::endl;
+  //std::cout<<"Path gotten"<<std::endl;
+  //std::cout<<pathToFill<<std::endl;
+  //std::cout<<"Path printed"<<std::endl;
   if(pathToFill.size()!=3)
     ti->failItem(__SPOT__);
   ti->passItem();
@@ -88,7 +88,7 @@ static void test2()
       pathToFill.erase(pathToFill.begin(),pathToFill.end());
       tmpId = myStaticSPNet.getNodeId(nodeIt);
       myShortSolver.getPath(myStaticSPNet,myStaticSPNet.find(tmpId),pathToFill);
-      std::cout<<"Path for nodeId "<<tmpId<<" = "<<pathToFill<<std::endl;
+      //std::cout<<"Path for nodeId "<<tmpId<<" = "<<pathToFill<<std::endl;
     }
   ti->passItem();
 }

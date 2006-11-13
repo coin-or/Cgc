@@ -51,21 +51,13 @@ void netConstruction(NetType &net)
     NodeLabel one;
     NodeLabel two;
     typename NetType::iterator zeroIter = net.insert(zero);
-    std::cout<<"net="<<net<<std::endl;
     typename NetType::iterator oneIter = net.insert(one);
-    std::cout<<"net="<<net<<std::endl;
     typename NetType::iterator twoIter = net.insert(two);
-    std::cout<<"net="<<net<<std::endl;
     ArcCost arcZero;
-    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(zeroIter,arcZero,oneIter);
-    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(zeroIter,arcZero,twoIter);
-    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(oneIter,arcZero,twoIter);
-    std::cout<<"net="<<net<<std::endl;
     net.arc_insert(twoIter,arcZero,zeroIter);
-    std::cout<<"net="<<net<<std::endl;
 }
 
 
@@ -154,14 +146,14 @@ int ConnCompTest(TestBed &myBed)
 {
     TestItem::setBed(&myBed);
 
-//    test1<MyNet>("ConnComp:Simple Construction:StaticNet");
-//    test1<MyNet2>("ConnComp:Simple Construction:DynNet");
+    test1<MyNet>("ConnComp:Simple Construction:StaticNet");
+    test1<MyNet2>("ConnComp:Simple Construction:DynNet");
     test1<MyNet3>("ConnComp:Simple Construction:StaticFBNet");
-//    test2<MyNet>("ConnComp:Simple Network solve:StaticNet");
-//    test2<MyNet2>("ConnComp:Simple Network solve:DynNet");
+    test2<MyNet>("ConnComp:Simple Network solve:StaticNet");
+    test2<MyNet2>("ConnComp:Simple Network solve:DynNet");
     test2<MyNet3>("ConnComp:Simple Network solve:StaticFBNet");
-//    test3<MyNet>("ConnComp:Bigger net, same answer.:StaticNet");
-//    test3<MyNet2>("ConnComp:Bigger net, same answer.:DynNet");
+    test3<MyNet>("ConnComp:Bigger net, same answer.:StaticNet");
+    test3<MyNet2>("ConnComp:Bigger net, same answer.:DynNet");
     test3<MyNet3>("ConnComp:Bigger net, same answer.:StaticFBNet");
     return 0;
 }

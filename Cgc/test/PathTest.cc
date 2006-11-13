@@ -19,7 +19,7 @@ static void test1()
 	path.push_back(nodeId1);
 	path.push_back(nodeId2);
 	path.setCost(2);
-	std::cout<<"Path="<<path<<std::endl;
+	//std::cout<<"Path="<<path<<std::endl;
 	item1->passItem();
 }
 
@@ -28,7 +28,7 @@ static void test2()
   TestItem *ti = new TestItem("PathTest:2:Construct ArcPath");
   ArcPath<int> ap;
   ap.setCost(3);
-  std::cout<<"ArcPath:"<<ap<<std::endl;
+  //std::cout<<"ArcPath:"<<ap<<std::endl;
   ti->passItem();
 }
 static void test3()
@@ -40,11 +40,11 @@ static void test3()
 	path.push_back(nodeId1);
 	path.push_back(nodeId2);
 	path.setCost(2);
-    std::cout<<std::endl;
-	std::cout<<"Path="<<path<<std::endl;
+    //std::cout<<std::endl;
+	//std::cout<<"Path="<<path<<std::endl;
     path.reverse();
-	std::cout<<"Path Reversed ="<<path<<std::endl;
-    std::cout<<std::endl;
+	//std::cout<<"Path Reversed ="<<path<<std::endl;
+    //std::cout<<std::endl;
 	ti->passItem();
 }
 

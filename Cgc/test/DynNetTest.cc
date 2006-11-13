@@ -182,7 +182,7 @@ static void test6()
 
   buildBasicNet(net);
 
-  std::cout<<"Net="<<net<<std::endl;
+  //std::cout<<"Net="<<net<<std::endl;
 
   MyNetType::iterator nodeIt = net.find(NodeLabel(1));
   if(compareToOne(nodeIt))
@@ -207,9 +207,9 @@ static void test6()
   if(compareToOne(nodeCIt))
     {
       const MyNetType::Node &nodeRef = (*nodeIt);
-      std::cout<<"On failure is :"<<nodeRef;
+      //std::cout<<"On failure is :"<<nodeRef;
       //nodeRef.print(std::cout);
-      std::cout<<std::endl;
+     // std::cout<<std::endl;
       item1->failItem(__SPOT__);
     }
   //std::cout<<"6.4"<<std::endl;
@@ -238,18 +238,18 @@ static void test7()
 
   int  count=0;
   //std::cout<<"7.2"<<std::endl;
-  std::cout<<"Net Constructed, iterating"<<std::endl<<net<<std::endl;
+  //std::cout<<"Net Constructed, iterating"<<std::endl<<net<<std::endl;
   //std::cout<<"7.2.1"<<std::endl;
   for(MyNetType::arc_iterator arcIt = net.arc_begin();
       arcIt != net.arc_end(); arcIt++)
     {
       count++;
       //std::cout<<"7.2.2"<<std::endl;
-      std::cout<<"arc # "<<count<<" = "<<*(*arcIt)<<std::endl;
+      //std::cout<<"arc # "<<count<<" = "<<*(*arcIt)<<std::endl;
       //std::cout<<"7.2.3"<<std::endl;
       if(count>1)
 	{
-	  std::cout<<"counted "<<count<<" arcs...breaking"<<std::endl;
+	  //std::cout<<"counted "<<count<<" arcs...breaking"<<std::endl;
 	  item1->failItem(__SPOT__);
 	  break;
 	}
@@ -276,7 +276,7 @@ static void test7()
   for(NetNode::iterator nodeArcIter= node.begin();
       nodeArcIter != node.end();nodeArcIter++)
     {
-      std::cout<<"*nodeArcIter="<<(*(*nodeArcIter))<<std::endl;
+      //std::cout<<"*nodeArcIter="<<(*(*nodeArcIter))<<std::endl;
       arcCnt--;
     }
   if(arcCnt)
@@ -301,7 +301,7 @@ static void test8()
       for(MyNetType::Node::const_iterator aIt = (*nodeIt).begin();
 	  aIt != (*nodeIt).end();aIt++)
 	{
-	  std::cout<<" **Arc at node has :"<<*aIt<<std::endl;
+	  //std::cout<<" **Arc at node has :"<<*aIt<<std::endl;
 	  count++;
 	  if(count>1)
 	    {
@@ -327,7 +327,7 @@ static void test8()
 	}
       count=0;
       
-      std::cout<<"ArcSize = "<<net.arc_size()<<std::endl;
+      //std::cout<<"ArcSize = "<<net.arc_size()<<std::endl;
       MyNetType::const_arc_iterator endIt = net.arc_end();
       for(MyNetType::const_arc_iterator arcIt3 = net.arc_begin();
 	  arcIt3 != endIt ;arcIt3++)
@@ -392,14 +392,14 @@ static void test10()
       std::cout<<"Incorrect reporting of number of arcs in Node"<<std::endl;
     }
   int counter=0;
-  std::cout<<"Begin at "<<*(*(*node0).begin())<<std::endl;
+  //std::cout<<"Begin at "<<*(*(*node0).begin())<<std::endl;
   MyNetType::Node::iterator nodeArcIt = (*node0).begin();
   for( ;nodeArcIt != (*node0).end(); nodeArcIt++)
     {
       counter++;
       if(counter>2)
 	break;
-      std::cout<<"*(*arcIt)="<<*(*nodeArcIt)<<std::endl;
+      //std::cout<<"*(*arcIt)="<<*(*nodeArcIt)<<std::endl;
     }
   if(counter!=2)
     {
@@ -419,10 +419,10 @@ static void test11()
   startNodes = net.size();
   startArcs = net.arc_size();
 
-  std::cout<<"Net="<<net<<std::endl;
+  //std::cout<<"Net="<<net<<std::endl;
 
   net.erase(net.begin());
-  std::cout<<"Node 0 removed, Net="<<net<<std::endl;
+  //std::cout<<"Node 0 removed, Net="<<net<<std::endl;
   if(net.size()!= startNodes-1)
     {
       std::cout<<"start="<<startNodes<<" newSize="<<net.size()<<std::endl;
@@ -469,40 +469,40 @@ void buildBiggerNet(MyNetType &netToFill)
   MyNetType::arc_iterator theArc(netToFill);
   
   // insert an arc from zero to one
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc=netToFill.arc_insert(tail,oneCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
-  std::cout<<"after added first arc:\n"<<netToFill<<std::endl;
+  //std::cout<<"after added first arc:\n"<<netToFill<<std::endl;
   head++;
   // insert an arc from zero to two
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,twoCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
-  std::cout<<"after added second arc:\n"<<netToFill<<std::endl;
+  //std::cout<<"after added second arc:\n"<<netToFill<<std::endl;
   tail++;
   // insert an arc from one to two
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,threeCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
-  std::cout<<"after added third arc:\n"<<netToFill<<std::endl;
+  //std::cout<<"after added third arc:\n"<<netToFill<<std::endl;
   head++;tail++;
   //insert an arc from two to three
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,fourCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
-  std::cout<<"after added fourth arc:\n"<<netToFill<<std::endl;
+  //std::cout<<"after added fourth arc:\n"<<netToFill<<std::endl;
 
   //insert an arc from zero to three
   tail=netToFill.begin();
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,fiveCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
-  std::cout<<"after added fifth arc:\n"<<netToFill<<std::endl;
+  //std::cout<<"after added fifth arc:\n"<<netToFill<<std::endl;
   ti->passItem();
 }
 
@@ -518,22 +518,22 @@ static void test12()
   startNodes = net.size();
   startArcs = net.arc_size();
 
-  std::cout<<"Net="<<net<<std::endl;
+  //std::cout<<"Net="<<net<<std::endl;
 
   MyNetType::iterator nodeIt = net.begin();
   nodeIt++;
   
   net.erase(nodeIt);
-  std::cout<<"Node 1 removed, Net="<<net<<std::endl;
+ // std::cout<<"Node 1 removed, Net="<<net<<std::endl;
   
   if(net.size()!= startNodes-1)
     {
-      std::cout<<"start="<<startNodes<<" newSize="<<net.size()<<std::endl;
+     // std::cout<<"start="<<startNodes<<" newSize="<<net.size()<<std::endl;
       ti->failItem(__SPOT__);
     }
   if(net.size()!=3)
     {
-      std::cout<<"start="<<startNodes<<" newSize="<<net.size()<<std::endl;
+      //std::cout<<"start="<<startNodes<<" newSize="<<net.size()<<std::endl;
       ti->failItem(__SPOT__);
     }
 
@@ -558,7 +558,7 @@ static void test12()
       std::cout<<" newArcSize="<<net.arc_size()<<" expected 3!"<<std::endl;
       ti->failItem(__SPOT__);
     }
-  std::cout<<"First arc removed, Net="<<net<<std::endl;
+  //std::cout<<"First arc removed, Net="<<net<<std::endl;
   ti->passItem();
   
 }
@@ -574,14 +574,14 @@ static void test13()
     std::ofstream testFile("adjnet.net");
     net.saveAdjacency(testFile);
     testFile.close();
-    std::cout<<"13.1.net="<<net<<std::endl;
+    //std::cout<<"13.1.net="<<net<<std::endl;
   }
   {
-    std::cout<<"13.1.net="<<net<<std::endl;
+    //std::cout<<"13.1.net="<<net<<std::endl;
     std::ifstream testFile("adjnet.net");
     net.loadAdjacency(testFile);
     testFile.close();
-    std::cout<<"13.2.net="<<net<<std::endl;
+    //std::cout<<"13.2.net="<<net<<std::endl;
     std::ofstream testFile2("adjnet2.net");
     net.saveAdjacency(testFile2);
     testFile2.close();

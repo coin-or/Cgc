@@ -453,7 +453,7 @@ void test8()
       std::cout<<"Got value="<<pathToFill.getCost()<<std::endl;
       ti->failItem(__SPOT__);
     }
-  std::cout<<pathToFill<<std::endl;
+//  std::cout<<pathToFill<<std::endl;
   mySPNet.find(NodeId(3));
 }
 

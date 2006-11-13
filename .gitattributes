@@ -33,6 +33,7 @@ Cgc/src/StaticNet.h -text
 Cgc/test/BFTraversalTest.cc -text
 Cgc/test/ConnCompTest.cc -text
 Cgc/test/DFTraversalTest.cc -text
+Cgc/test/DIMACSFormatTest.cpp -text
 Cgc/test/DotOutputFormatTest.cpp -text
 Cgc/test/DynNetTest.cc -text
 Cgc/test/LayerSPTest.cc -text

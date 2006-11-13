@@ -3,25 +3,25 @@
   Copyright (C) 2006 H. Philip Walton
   All Rights Reserved.
 */
+#include <iostream>
 #include <StaticNet.h>
 #include <DynNet.h>
 #include <StaticFBNet.h>
 #include <SSPSolver.h>
 #include "TestItem.h"
 #include "TestBed.h"
-
-#include <iostream>
+#include <NodeId.h>
 #include <set>
 #include <sstream>
-
 using namespace Cgc;
 
 // Successive Shortest Path min cost flow -- Mangnanti Pg 321
 // section 9.7
 
-typedef StaticNet<MCFNodeData,ArcData>  MyNetType;
-typedef DynNet<MCFNodeData,ArcData>     MyNetType2;
-typedef StaticFBNet<MCFNodeData,ArcData> MyNetType3;
+typedef StaticNet<MCFNodeData,MCFArcData>  MyNetType;
+typedef DynNet<MCFNodeData,MCFArcData>     MyNetType2;
+typedef StaticFBNet<MCFNodeData,MCFArcData> MyNetType3;
+/*
 template <class NetType>
 std::ostream & operator<<(std::ostream &os, const NetType &net)
 {
@@ -43,6 +43,7 @@ std::ostream & operator<<(std::ostream &os, const NetType &net)
         }
     return os;
 }
+*/
 static int instance=0;
 template <class NetType>
 NetType *buildNet(std::string &testname)
@@ -73,25 +74,25 @@ NetType *buildNet(std::string &testname)
     if(it3!=nodeThree)
         ti->failItem(__SPOT__);
     // arc one forward
-    n->arc_insert(nodeZero,ArcData(2,4,true),nodeOne);
+    n->arc_insert(nodeZero,MCFArcData(2,4,true),nodeOne);
     //arc2forward
-    n->arc_insert(nodeZero,ArcData(2,2,true),nodeTwo);
+    n->arc_insert(nodeZero,MCFArcData(2,2,true),nodeTwo);
     // arc one reverse
-    n->arc_insert(nodeOne,ArcData(-2,0,false),nodeZero);
+    n->arc_insert(nodeOne,MCFArcData(-2,0,false),nodeZero);
     //arc3forward
-    n->arc_insert(nodeOne,ArcData(1,2,true),nodeTwo);
+    n->arc_insert(nodeOne,MCFArcData(1,2,true),nodeTwo);
     //arc4forward
-    n->arc_insert(nodeOne,ArcData(3,3,true),nodeThree);
+    n->arc_insert(nodeOne,MCFArcData(3,3,true),nodeThree);
     //arc2reverse
-    n->arc_insert(nodeTwo,ArcData(-2,0,false),nodeZero);
+    n->arc_insert(nodeTwo,MCFArcData(-2,0,false),nodeZero);
     //arc3reverse
-    n->arc_insert(nodeTwo,ArcData(-1,0,false),nodeOne);
+    n->arc_insert(nodeTwo,MCFArcData(-1,0,false),nodeOne);
     //arc5forward
-    n->arc_insert(nodeTwo,ArcData(1,5,true),nodeThree);
+    n->arc_insert(nodeTwo,MCFArcData(1,5,true),nodeThree);
     //arc4reverse
-    n->arc_insert(nodeThree,ArcData(-3,0,false),nodeOne);
+    n->arc_insert(nodeThree,MCFArcData(-3,0,false),nodeOne);
     //arc5reverse
-    n->arc_insert(nodeThree,ArcData(-1,0,false),nodeTwo);
+    n->arc_insert(nodeThree,MCFArcData(-1,0,false),nodeTwo);
     ti->passItem();
     return n;
 }
@@ -128,6 +129,43 @@ void SSPSolverTest1(const std::string &testName)
         {
         ti->failItem(__SPOT__);
         }
+    typedef std::vector< typename SSPSolver<NetType>::Solution::FlowData > FlowVect;
+    const FlowVect &flowVect= sol.getFlowData();
+    int flowId=0;
+    for(FlowVect::const_iterator fi = flowVect.begin();fi!=flowVect.end();fi++)
+    {
+        switch(flowId)
+        {
+        case 0:
+            if((*fi).tail!=0 || (*fi).head!=1||(*fi).flow!=2)
+            {
+                ti->failItem(__SPOT__);
+            }
+            break;
+        case 1:
+            if((*fi).tail!=0 || (*fi).head!=2||(*fi).flow!=2)
+            {
+                ti->failItem(__SPOT__);
+            }
+            break;
+        case 2:
+            if((*fi).tail!=1 || (*fi).head!=2||(*fi).flow!=2)
+            {
+                ti->failItem(__SPOT__);
+            }
+            break;
+        case 3:
+            if((*fi).tail!=2 || (*fi).head!=3||(*fi).flow!=4)
+            {
+                ti->failItem(__SPOT__);
+            }
+            break;
+        default:
+            ti->failItem(__SPOT__);
+            break;
+        };
+        flowId++;
+    }
     ti->passItem();
 }
 

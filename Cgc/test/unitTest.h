@@ -27,6 +27,7 @@ int SSPSolverTest(TestBed &bed);
 int StaticFBNetTest(TestBed &bed);
 int StaticNetTest(TestBed &bed);
 void DotOutputFormatTest(TestBed &bed);
+void ReadDimacsTest(TestBed &bed);
 
 
 #endif

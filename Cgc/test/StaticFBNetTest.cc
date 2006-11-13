@@ -244,15 +244,15 @@ static void test7()
 
   int  count=0;
   //cout<<"7.2"<<std::endl;
-  std::cout<<"Net Constructed, iterating"<<std::endl<<net<<std::endl;
-  std::cout<<"7.2.1"<<std::endl;
+  //std::cout<<"Net Constructed, iterating"<<std::endl<<net<<std::endl;
+  //std::cout<<"7.2.1"<<std::endl;
   for(MyNetType::const_arc_iterator arcIt = net.arc_begin();
       arcIt != net.arc_end(); arcIt++)
       {
       count++;
-      std::cout<<"7.2.2"<<std::endl;
-      std::cout<<"arc # "<<count<<" = "<<*(*arcIt)<<std::endl;
-      std::cout<<"7.2.3"<<std::endl;
+      //std::cout<<"7.2.2"<<std::endl;
+      //std::cout<<"arc # "<<count<<" = "<<*(*arcIt)<<std::endl;
+      //std::cout<<"7.2.3"<<std::endl;
       if(count>1)
 	{
 	  std::cout<<"counted "<<count<<" arcs...breaking"<<std::endl;
@@ -281,7 +281,7 @@ static void test7()
   for(NetNode::iterator nodeArcIter= node.begin();
       nodeArcIter != node.end();nodeArcIter++)
     {
-      std::cout<<"*nodeArcIter="<<(*(*nodeArcIter))<<std::endl;
+      //std::cout<<"*nodeArcIter="<<(*(*nodeArcIter))<<std::endl;
       arcCnt--;
     }
   if(arcCnt)
@@ -306,7 +306,7 @@ static void test8()
       for(MyNetType::Node::const_iterator aIt = (*nodeIt).begin();
 	  aIt != (*nodeIt).end();aIt++)
 	{
-	  std::cout<<" **Arc at node has :"<<*(*aIt)<<std::endl;
+	  //std::cout<<" **Arc at node has :"<<*(*aIt)<<std::endl;
 	  count++;
 	  if(count>1)
 	    {
@@ -332,7 +332,7 @@ static void test8()
 	}
       count=0;
       
-      std::cout<<"ArcSize = "<<net.arc_size()<<std::endl;
+      //std::cout<<"ArcSize = "<<net.arc_size()<<std::endl;
       MyNetType::const_arc_iterator endIt = net.arc_end();
       for(MyNetType::const_arc_iterator arcIt3 = net.arc_begin();
 	  arcIt3 != endIt ;arcIt3++)
@@ -369,7 +369,6 @@ static void test9()
       std::cout<<"ERROR"<<std::endl;
       ti->failItem(__SPOT__);
       }
-  std::cout<<"NEXT COMPARE fails"<<std::endl;
   while(ait2 != stopper)
       {
       count++;
@@ -401,14 +400,14 @@ static void test10()
       std::cout<<"Incorrect reporting of number of arcs in Node"<<std::endl;
     }
   int counter=0;
-  std::cout<<"Begin at "<<*(*(*node0).begin())<<std::endl;
+  //std::cout<<"Begin at "<<*(*(*node0).begin())<<std::endl;
   MyNetType::Node::iterator nodeArcIt = (*node0).begin();
   for( ;nodeArcIt != (*node0).end(); nodeArcIt++)
     {
       counter++;
       if(counter>2)
 	break;
-      std::cout<<"*(*arcIt)="<<*(*nodeArcIt)<<std::endl;
+      //std::cout<<"*(*arcIt)="<<*(*nodeArcIt)<<std::endl;
     }
   if(counter!=2)
     {
@@ -449,28 +448,28 @@ void buildBiggerNet(MyNetType &netToFill)
   MyNetType::arc_iterator theArc(netToFill);
   
   // insert an arc from zero to one
-  printTailHead(netToFill,tail,head);
+//  printTailHead(netToFill,tail,head);
   theArc=netToFill.arc_insert(tail,oneCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
   //std::cout<<"after added first arc:\n"<<netToFill<<std::endl;
   head++;
   // insert an arc from zero to two
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,twoCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
   //std::cout<<"after added second arc:\n"<<netToFill<<std::endl;
   tail++;
   // insert an arc from one to two
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,threeCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
   //std::cout<<"after added third arc:\n"<<netToFill<<std::endl;
   head++;tail++;
   //insert an arc from two to three
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,fourCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);
@@ -478,7 +477,7 @@ void buildBiggerNet(MyNetType &netToFill)
 
   //insert an arc from zero to three
   tail=netToFill.begin();
-  printTailHead(netToFill,tail,head);
+  //printTailHead(netToFill,tail,head);
   theArc = netToFill.arc_insert(tail,fiveCost,head);
   if(theArc==netToFill.arc_end())
     ti->failItem(__SPOT__);

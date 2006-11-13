@@ -5,6 +5,7 @@ All Rights Reserved.
 */
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <StaticNet.h>
 #include <DynNet.h>
 #include <StaticFBNet.h>
@@ -39,7 +40,8 @@ void testOutput(const std::string &testName, const std::string &fileName)
     TestItem *ti = new TestItem(testName.c_str());
     MyNetType *net = constructNet<MyNetType>();
     GraphDotFormat<NetType> formatter("MyGraph",*net);
-    formatter.print(std::cout);
+    std::stringstream outString;
+    formatter.print(outString);
     std::ofstream outFile(fileName.c_str());
     formatter.print(outFile);
     ti->passItem();
@@ -48,7 +50,7 @@ void testOutput(const std::string &testName, const std::string &fileName)
 void DotOutputFormatTest(TestBed &bed)
 {
     TestItem::setBed(&bed);
-    testOutput<MyNetType>("StaticNet Dot format output","testNet.dot");
-    testOutput<MyNetType>("DynNet Dot format output","testNet2.dot");
-    testOutput<MyNetType>("StaticFBNet Dot format output","testNet3.dot");
+    testOutput<MyNetType>("Dot format output:StaticNet ","testNet.dot");
+    testOutput<MyNetType>("Dot format output:DynNet","testNet2.dot");
+    testOutput<MyNetType>("Dot format output:StaticFBNet ","testNet3.dot");
 }

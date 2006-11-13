@@ -30,11 +30,11 @@ void constructSimpleNet(DynDijkSPNet &net)
   DynDijkSPNet::iterator node2 = net.insert(tmp);
   DynDijkSPNet::iterator node3 = net.insert(tmp);
   DynDijkSPNet::iterator node4 = net.insert(tmp);
-  std::cout<<"tmp = "<<tmp<<std::endl;
-  std::cout<<"inserting nodeId = "<<net.getNodeId(node1)<<std::endl; // Id1
-  std::cout<<"inserting nodeId = "<<net.getNodeId(node2)<<std::endl; // Id2
-  std::cout<<"inserting nodeId = "<<net.getNodeId(node3)<<std::endl; // Id3
-  std::cout<<"inserting nodeId = "<<net.getNodeId(node4)<<std::endl; // Id4
+  //std::cout<<"tmp = "<<tmp<<std::endl;
+  //std::cout<<"inserting nodeId = "<<net.getNodeId(node1)<<std::endl; // Id1
+  //std::cout<<"inserting nodeId = "<<net.getNodeId(node2)<<std::endl; // Id2
+  //std::cout<<"inserting nodeId = "<<net.getNodeId(node3)<<std::endl; // Id3
+  //std::cout<<"inserting nodeId = "<<net.getNodeId(node4)<<std::endl; // Id4
   int count=0;
   for( DynDijkSPNet::iterator nodeIt1 = net.begin();
        nodeIt1 != net.end(); nodeIt1++)
@@ -111,16 +111,16 @@ static void test1()
   
   DijkSolver<DynDijkSPNet, DynDijkSPNet::iterator > myShortSolver;
   Path pathToFill;
-  std::cout<<"SOLVING WITH SOURCE ="<<*myDynSPNet.find(NodeId(0))<<std::endl;
+  //std::cout<<"SOLVING WITH SOURCE ="<<*myDynSPNet.find(NodeId(0))<<std::endl;
   
   DynDijkSPNet::iterator sourceIt=myDynSPNet.find(NodeId(0));
   myShortSolver.solve(myDynSPNet, sourceIt);
-  std::cout<<"Solve done"<<std::endl;
+  //std::cout<<"Solve done"<<std::endl;
   sourceIt=myDynSPNet.find(NodeId(2));
   myShortSolver.getPath(myDynSPNet, sourceIt,pathToFill);
-  std::cout<<"Path gotten"<<std::endl;
-  std::cout<<pathToFill<<std::endl;
-  std::cout<<"Path printed"<<std::endl;
+  //std::cout<<"Path gotten"<<std::endl;
+  //std::cout<<pathToFill<<std::endl;
+  //std::cout<<"Path printed"<<std::endl;
   if(pathToFill.size()!=3)
     {
       std::cout<<"Path size = "<<pathToFill.size()<<std::endl;
@@ -147,7 +147,7 @@ static void test2()
       pathToFill.erase(pathToFill.begin(),pathToFill.end());
       tmpId = myDynSPNet.getNodeId(nodeIt);
       myShortSolver.getPath(myDynSPNet,myDynSPNet.find(tmpId),pathToFill);
-      std::cout<<"Path for nodeId "<<tmpId<<" = "<<pathToFill<<std::endl;
+      //std::cout<<"Path for nodeId "<<tmpId<<" = "<<pathToFill<<std::endl;
     }
   ti->passItem();
 }
