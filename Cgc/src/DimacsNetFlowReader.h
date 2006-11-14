@@ -1,15 +1,30 @@
+/*
+Author: H. Philip Walton
+Copyright (C) 2006 H. Philip Walton
+All Rights Reserved.
+*/
 #ifndef DIMACSNETFLOWREADER_H
 #define DIMACSNETFLOWREADER_H
 #include <stdio.h>
 #include <list>
 namespace Cgc
 {
+    /** internal utility class used for intermediate storage.  
+    @ingroup InternalUse
+    CGC expects ordered arcs, SSPSolver expects arcs 
+        in both directions, DIMACS gives only one direction.  Easiest solution is to construct a set of correctly 
+        ordered direction arcs, then add them in a 2nd phase.
+        */
         typedef struct {
                 int first;
                 int second;
                 int third;
                 int forth;
         } Quadruplet;
+        /** internal ordering object 
+        @ingroup InternalUse
+        @see Quadruplet.
+        */
         class QuadOrderOneTwo : public std::binary_function<const Quadruplet &, const Quadruplet &,bool>
         {
         public:
@@ -22,6 +37,12 @@ namespace Cgc
                 return q1.second < q2.second;
             }
         };
+        /** Reader for DIMACS Min Cost Flow Network format.  
+        @ingroup PublicInterface
+        The good news is that the format can be read.  
+        <p> Protocol is to construct a reader handing it the istream, then call "constructGraph()" and the graph will be
+        returned. pre-constructed from the DIMACS format data.
+        */
     template <class NetType >
     class DIMACSNetFlowReader
     {
@@ -61,7 +82,7 @@ namespace Cgc
                         assert(pNet);
                         for(int cnt=0;cnt<numNodes;cnt++)
                         {
-                            NetType::node_data nodeInfo;
+                            typename NetType::node_data nodeInfo;
                             pNet->insert(nodeInfo);
                         }
                     }
@@ -80,8 +101,9 @@ namespace Cgc
                     assert(demand!=0);
                     assert(nodeId>0);
                     assert(nodeId<=pNet->size());
-                    NetType::iterator netIt = pNet->find(NodeId(nodeId-1));
-                    NetType::Node &node = (*netIt);
+                    typename NetType::iterator netIt = pNet->find(NodeId(nodeId-1));
+                    /// @TODO explore why the cost_cast is needed here. gcc3.x
+                    typename NetType::Node &node = const_cast<typename NetType::Node &>(*netIt);
                     (*node).setDemand(demand);
                 }
                 if(isArcLine(buffer))
@@ -100,6 +122,11 @@ namespace Cgc
                     assert(a=='a');
                     assert(tailNodeId>0&&tailNodeId<=pNet->size());
                     assert(headNodeId>0&&headNodeId<=pNet->size());
+                    // add the right directioned arc first, then the back directioned arc.
+                    // The second arc would be out of order, which is why the intermediate storage is used.
+                    /** @todo write an alg which would take the min flow.  Or...alternatively, figure out if there
+                        is a way to preprocess them away.  I know not which. 
+                     */
                     Quadruplet q;
                     q.first=tailNodeId-1;
                     q.second=headNodeId-1;
@@ -113,13 +140,15 @@ namespace Cgc
                     mArcList.insert(q);
                 }
             }
+            assert(bFoundArcs);
+            // populate the graph from the intermediate storage for the arcs.
             for(ArcList::iterator ali = mArcList.begin();ali!=mArcList.end();ali++)
             {
                 NodeId tailNode = (*ali).first;
                 NodeId headNode = (*ali).second;
-                NetType::iterator headIt = pNet->find(headNode);
-                NetType::iterator tailIt = pNet->find(tailNode);
-                NetType::arc_data arcData;
+                typename NetType::iterator headIt = pNet->find(headNode);
+                typename NetType::iterator tailIt = pNet->find(tailNode);
+                typename NetType::arc_data arcData;
                 arcData.setR((*ali).third);
                 arcData.setC((*ali).forth);
                 pNet->arc_insert(tailIt,arcData,headIt);

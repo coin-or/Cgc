@@ -16,6 +16,9 @@ All Rights Reserved.
 
 namespace Cgc
 {
+    /** Internal ordering object. to order node iterators on node id.
+    @ingroup Internal_Use
+    */
     template< class Net >
     class NodeIterNodeIdLess: public std::binary_function<typename Net::iterator,typename Net::iterator,bool>
     { 

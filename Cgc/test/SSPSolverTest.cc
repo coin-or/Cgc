@@ -132,7 +132,7 @@ void SSPSolverTest1(const std::string &testName)
     typedef std::vector< typename SSPSolver<NetType>::Solution::FlowData > FlowVect;
     const FlowVect &flowVect= sol.getFlowData();
     int flowId=0;
-    for(FlowVect::const_iterator fi = flowVect.begin();fi!=flowVect.end();fi++)
+    for(typename FlowVect::const_iterator fi = flowVect.begin();fi!=flowVect.end();fi++)
     {
         switch(flowId)
         {

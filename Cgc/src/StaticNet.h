@@ -206,8 +206,8 @@ namespace Cgc
         typedef typename NodeCollection::const_iterator const_iterator;
         typedef typename NodeCollection::reverse_iterator reverse_iterator;
         typedef typename NodeCollection::const_reverse_iterator const_reverse_iterator;
-        typedef typename NodeInfo node_data;
-        typedef typename ArcInfo arc_data;
+        typedef NodeInfo node_data;
+        typedef ArcInfo arc_data;
 
     protected:
 

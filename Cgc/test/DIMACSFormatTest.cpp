@@ -104,9 +104,9 @@ void test2(const std::string &testName)
     //std::cout<<*net<<std::endl;
     SSPSolver<NetType> sspSolver;
     sspSolver.solve(*net);
-    SSPSolver<NetType>::Solution solution(*net);
+    typename SSPSolver<NetType>::Solution solution(*net);
     sspSolver.getSolution(*net,solution);
-    typedef std::vector<SSPSolver<NetType>::Solution::FlowData> MyFlowDataVect;
+    typedef std::vector<typename SSPSolver<NetType>::Solution::FlowData> MyFlowDataVect;
     const MyFlowDataVect &flows = solution.getFlowData();
     if(flows[0].tail!=0)
         ti->failItem(__SPOT__);

@@ -221,7 +221,10 @@ public:
         IntSet D;
         for(unsigned cnt=0;cnt<net.size();cnt++)
             {
-                NetType::Node &node = (*net.find(NodeId(cnt)));
+            typename NetType::iterator netIt = net.find(NodeId(cnt));
+            ///@TODO why is the const_cast necessary?
+            typename NetType::Node &node =
+                const_cast<typename NetType::Node &>(*netIt);
             if((*node).getE()>0)
                 E.insert(cnt);
             else
@@ -333,7 +336,9 @@ public:
             for(typename NetType::iterator nodeIt = net.begin();
                 nodeIt!=net.end();nodeIt++)
                 {
-                    NetType::Node &node = (*nodeIt);
+                /// @TODO figure out why the const cast is necessary... gcc3.x
+                    typename NetType::Node &node = const_cast<typename NetType::Node &>(*nodeIt);
+                    //typename NetType::Node &node = (*nodeIt);
                 int tailPi= (*node).getPi();
                 for(typename NodeType::iterator ai=(*nodeIt).begin();
                     ai!=(*nodeIt).end();ai++)

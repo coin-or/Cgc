@@ -10,6 +10,8 @@ OBJS= BFTraversalTest.o \
 	ConnCompTest.o  \
 	DFTraversalTest.o \
 	DynNetTest.o \
+	DIMACSFormatTest.o \
+	DotOutputFormatTest.o \
 	LayerSPTest.o \
 	MSTData.o \
 	MSTDataTest.o \
