@@ -24,6 +24,7 @@ namespace Cgc
         @brief These are the main graph implementation classes.
         @ingroup PublicInterface
      */
+
     template <class NodeInfo, class ArcInfo>
     class __StaticArcType;
 
@@ -43,7 +44,7 @@ namespace Cgc
 #endif
 
     /** Internal class storing a node type. 
-    @ingroup PublicInterface
+    @ingroup InternalUse
     @see StaticNet::Node
     */
     template <class NodeInfo, class ArcInfo>
@@ -126,7 +127,7 @@ namespace Cgc
     };
 
     /** Internal class storing a arc type.  
-    @ingroup PublicInterface
+    @ingroup InternalUse
     @see StaticNet::Arc
     */
     template <class NodeInfo, class ArcInfo>

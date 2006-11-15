@@ -136,8 +136,8 @@ namespace Cgc
         friend class DynNet<NodeInfo,ArcInfo>;
     };
 
-    /** @brief Node type for a dynamic network.
-    @ingroup PublicInterface
+    /** @brief Node type for a dynamic network. DynNet
+    @ingroup InternalUse
     @see DynNet
     */
     template < class NodeInfo, class ArcInfo >
@@ -323,7 +323,7 @@ namespace Cgc
     };
 
     /** @brief Arc Definition for DynNet arc types.
-    @ingroup PublicInterface
+    @ingroup InternalUse
     */
     template < class NodeInfo ,class ArcInfo>
     class __ArcType

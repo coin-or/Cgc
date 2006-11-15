@@ -9,7 +9,7 @@ All Rights Reserved.
 #include <list>
 namespace Cgc
 {
-    /** internal utility class used for intermediate storage.  
+    /** @brief internal utility class used for intermediate storage.  
     @ingroup InternalUse
     CGC expects ordered arcs, SSPSolver expects arcs 
         in both directions, DIMACS gives only one direction.  Easiest solution is to construct a set of correctly 
@@ -37,7 +37,8 @@ namespace Cgc
                 return q1.second < q2.second;
             }
         };
-        /** Reader for DIMACS Min Cost Flow Network format.  
+
+        /** @brief Reader for DIMACS Min Cost Flow Network format.  
         @ingroup PublicInterface
         The good news is that the format can be read.  
         <p> Protocol is to construct a reader handing it the istream, then call "constructGraph()" and the graph will be
