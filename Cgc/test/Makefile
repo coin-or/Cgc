@@ -31,6 +31,7 @@ OBJS= BFTraversalTest.o \
 	TestData.o \
 	TestItem.o \
 	TestBed.o \
+	SPLabelCorrTest.o \
 	unitTest.o
 
 all: unitTest

@@ -82,7 +82,7 @@ namespace Cbc_LabelCorr
 
 
 };
-#define DYNTEST
+//#define DYNTEST
 #define STATICFBTEST
 typedef Cgc::StaticFBNet< Cbc_LabelCorr::NodeLabel, Cbc_LabelCorr::ArcCost > StaticSPFBNet;
 typedef Cgc::DynNet< Cbc_LabelCorr::NodeLabel, Cbc_LabelCorr::ArcCost > DynSPFBNet;
@@ -132,9 +132,9 @@ void SPLabelCorrTest(TestBed &bed)
 #ifdef DYNTEST
     TestItem *ti1= new TestItem("DynNet Label Correcting SP test");
     DynSPFBNet net(5,6);
-    constructGraph(net);
-    solve(net);
-    if(checkSolution(net))
+    constructGraph<DynSPFBNet>(net);
+    solve<DynSPFBNet>(net);
+    if(checkSolution<DynSPFBNet>(net))
     {
         ti1->passItem();
     }
@@ -146,8 +146,8 @@ void SPLabelCorrTest(TestBed &bed)
 #ifdef STATICFBTEST
     StaticSPFBNet net2(5,6);
     TestItem *ti2 = new TestItem("StaticFBNet Label Correcting SP test");
-    constructGraph(net2);
-    solve(net2);
+    constructGraph<StaticSPFBNet>(net2);
+    solve<StaticSPFBNet>(net2);
     if(checkSolution(net2))
     {
         ti2->passItem();
@@ -159,3 +159,4 @@ void SPLabelCorrTest(TestBed &bed)
 #endif
 
 }
+ 
