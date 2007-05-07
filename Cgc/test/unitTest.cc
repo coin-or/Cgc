@@ -30,6 +30,7 @@ int main()
         StaticFBNetTest(myBed);
         DotOutputFormatTest(myBed);
         ReadDimacsTest(myBed);
+        SPLabelCorrTest(myBed);
     }
     return 0;
 }

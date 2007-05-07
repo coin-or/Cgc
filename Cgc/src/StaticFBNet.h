@@ -655,7 +655,7 @@ public:
                             const ArcInfo &info,
                             const iterator &headNode)
     {
-        assert(currentNumArcs<arcs.size());
+        assert((unsigned)currentNumArcs<arcs.size());
         if((cacheLastInsert==NULL)||(cacheLastInsert<=&(*tailNode)))
             {
             cacheLastInsert = &(*tailNode);
@@ -760,7 +760,7 @@ public:
     Cgc::NodeId getNodeId(const const_iterator &nodeIter)const
     {
         const const_iterator beg(begin());
-        return Cgc::NodeId(std::distance(beg,nodeIter));
+        return Cgc::NodeId((unsigned short)std::distance(beg,nodeIter));
         //return Cgc::NodeId(((int)(&(*nodeIter) -&(nodes[0]))));
     }
     friend class SFBNetConstArcIterator< StaticFBNet<NodeInfo,ArcInfo>,

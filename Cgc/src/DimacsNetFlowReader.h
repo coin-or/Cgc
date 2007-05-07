@@ -101,7 +101,7 @@ namespace Cgc
                     assert(n=='n');
                     assert(demand!=0);
                     assert(nodeId>0);
-                    assert(nodeId<=pNet->size());
+                    assert((unsigned)nodeId<=pNet->size());
                     typename NetType::iterator netIt = pNet->find(NodeId(nodeId-1));
                     /// @TODO explore why the cost_cast is needed here. gcc3.x
                     typename NetType::Node &node = const_cast<typename NetType::Node &>(*netIt);

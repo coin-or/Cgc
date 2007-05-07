@@ -28,6 +28,7 @@ Cgc/src/NodeIdMgr.h -text
 Cgc/src/PLess.h -text
 Cgc/src/Path.h -text
 Cgc/src/PathFind.h -text
+Cgc/src/SPLabelCorrectingSolver.h -text
 Cgc/src/SSPSolver.h -text
 Cgc/src/StaticFBNet.h -text
 Cgc/src/StaticNet.h -text
@@ -47,6 +48,7 @@ Cgc/test/NodeIdTest.cc -text
 Cgc/test/PathFindTest.cc -text
 Cgc/test/PathTest.cc -text
 Cgc/test/SPDynTest.cc -text
+Cgc/test/SPLabelCorrTest.cc -text
 Cgc/test/SPStaticFBTest.cc -text
 Cgc/test/SPStaticTest.cc -text
 Cgc/test/SPTest.cc -text
