@@ -29,5 +29,6 @@ int StaticNetTest(TestBed &bed);
 void DotOutputFormatTest(TestBed &bed);
 void ReadDimacsTest(TestBed &bed);
 void SPLabelCorrTest(TestBed &bed);
+void TopoSortTest(TestBed &myBed);
 
 #endif

@@ -9,7 +9,8 @@ int main()
 {
     {
         TestBed myBed;
-
+        TopoSortTest(myBed);
+        /*
         BFTraversalTest(myBed);
         ConnCompTest(myBed);
         DFTraversalTest(myBed);
@@ -31,6 +32,7 @@ int main()
         DotOutputFormatTest(myBed);
         ReadDimacsTest(myBed);
         SPLabelCorrTest(myBed);
+        */
     }
     return 0;
 }

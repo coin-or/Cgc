@@ -32,6 +32,7 @@ Cgc/src/SPLabelCorrectingSolver.h -text
 Cgc/src/SSPSolver.h -text
 Cgc/src/StaticFBNet.h -text
 Cgc/src/StaticNet.h -text
+Cgc/src/TopoSort.h -text
 Cgc/test/BFTraversalTest.cc -text
 Cgc/test/ConnCompTest.cc -text
 Cgc/test/DFTraversalTest.cc -text
@@ -65,6 +66,7 @@ Cgc/test/TestData.cc -text
 Cgc/test/TestData.h -text
 Cgc/test/TestItem.cc -text
 Cgc/test/TestItem.h -text
+Cgc/test/TopoSortTest.cc -text
 Cgc/test/unitTest.cc -text
 Cgc/test/unitTest.h -text
 /INSTALL -text
