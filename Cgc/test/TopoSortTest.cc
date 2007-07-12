@@ -14,6 +14,7 @@ typedef StaticNet<NodeType,ArcType>  MyNetType;
 typedef DynNet<NodeType,ArcType>     MyNetType2;
 typedef StaticFBNet<NodeType,ArcType> MyNetType3;
 
+// Creates a graph with a few quirks.  Nothing really special.
 template<class NetType> 
 NetType *constructNet()
 {
@@ -53,6 +54,7 @@ NetType *constructNet()
     return retval;
 }
 
+// Tests a 'successful' solve.
 template<class NetType>
 void topoSortTest1(std::string testName)
 {
@@ -64,6 +66,8 @@ void topoSortTest1(std::string testName)
     {
         ti->failItem(__SPOT__);
     }
+    // Check to see that nodes at the heads of arcs are later in the sequence
+    // than their predecessors.
     for(int cnt=0;cnt<nt->size();cnt++)
     {
         switch(cnt)
@@ -141,6 +145,7 @@ void topoSortTest1(std::string testName)
     ti->passItem();
 }
 
+// construct a simple graph with a simple cycle.
 template<class NetType> 
 NetType *constructNetCycle()
 {
@@ -158,6 +163,7 @@ NetType *constructNetCycle()
     return retval;
 }
 
+// test the "detected cycle".
 template<class NetType>
 void topoSortTest2(std::string testName)
 {
@@ -177,9 +183,11 @@ void topoSortTest2(std::string testName)
 void TopoSortTest(TestBed &myBed)
 {
     TestItem::setBed(&myBed);
+    // test with all networks, and a valid network.
     topoSortTest1<MyNetType>("TopoSortTest:01:build and solve one Topological sort:StaticNet");
     topoSortTest1<MyNetType2>("TopoSortTest:01:build and solve one Topological sort:DynNet");
     topoSortTest1<MyNetType3>("TopoSortTest:01:build and solve one Topological sort:StaticFBNet");
+    // test with all networks, and a cyclic network.
     topoSortTest2<MyNetType>("TopoSortTest:02:detect Cycles:StaticNet");
     topoSortTest2<MyNetType2>("TopoSortTest:01:detect Cycles:DynNet");
     topoSortTest2<MyNetType3>("TopoSortTest:01:detect Cycles:StaticFBNet");
