@@ -75,7 +75,7 @@ namespace Cgc
 			arcCollection.erase(arcCollection.begin(),arcCollection.end());
 			solutionArcs.erase(solutionArcs.begin(),solutionArcs.end());
 			//cout<<"s1"<<endl;
-
+	
 			NetArcIter endSpot= net.arc_end();
 
 			for(NetArcIter arcIt = net.arc_begin(); 
@@ -141,7 +141,8 @@ namespace Cgc
 						}
 					}
 				}
-				arcIdx++;
+				if(!done)
+					arcIdx++;
 				count++;
 			}
 			//cout<<"Solver complete!...returning zero"<<endl;

@@ -27,11 +27,14 @@ namespace Cgc
         {
             os<<"digraph \""<<getGraphName()<<"\" "<<getGraphAttributes(&mNet)<<" { "<<std::endl;
             typename NetType::const_iterator nodeIt;
-            typename NetType::const_arc_iterator arcIt;
             for(nodeIt = mNet.begin();nodeIt != mNet.end();nodeIt++)
             {
                 NodeId tailNodeId = mNet.getNodeId(nodeIt);
                 os<<"\t\""<<tailNodeId<<"\" "<<getNodeAttributes(&(*nodeIt))<<std::endl;
+				
+	            typename NetType::const_arc_iterator arcIt;
+				typename NetType::const_arc_iterator endIt = (*nodeIt).end();
+
                 for(arcIt = (*nodeIt).begin(); arcIt != (*nodeIt).end(); arcIt++)
                 {
                     NodeId headNodeId = mNet.getNodeId((*arcIt).head());

@@ -402,7 +402,9 @@ private:
 public :
     typedef SFBNetConstArcIterator<StaticFBNet<NodeInfo,ArcInfo>,
                               NodeInfo,ArcInfo> arc_iterator;
-  
+	SFBNetConstArcIterator()
+		:net(NULL)
+	{}
     SFBNetConstArcIterator(NetType &thenet)
     :net(&thenet),nodeIter(net->begin())
     { 
