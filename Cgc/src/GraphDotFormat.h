@@ -32,10 +32,14 @@ namespace Cgc
                 NodeId tailNodeId = mNet.getNodeId(nodeIt);
                 os<<"\t\""<<tailNodeId<<"\" "<<getNodeAttributes(&(*nodeIt))<<std::endl;
 				
-	            typename NetType::const_arc_iterator arcIt;
-				typename NetType::const_arc_iterator endIt = (*nodeIt).end();
+				typename NetType::Node::const_iterator arcIt;
+				typename NetType::Node::const_iterator endIt;
+	            //typename NetType::const_arc_iterator arcIt(mNet.arc_end());
+				//typename NetType::const_arc_iterator endIt(mNet.arc_end());
+				arcIt = (*nodeIt).begin();
+				endIt = (*nodeIt).end();
 
-                for(arcIt = (*nodeIt).begin(); arcIt != (*nodeIt).end(); arcIt++)
+                for(arcIt = (*nodeIt).begin(); arcIt != endIt; arcIt++)
                 {
                     NodeId headNodeId = mNet.getNodeId((*arcIt).head());
                     os<<"\t\""<<tailNodeId<<"\" -> \""<<headNodeId<<"\" "<<getArcAttributes(&(*arcIt))<<std::endl;
