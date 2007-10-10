@@ -396,7 +396,10 @@ namespace Cgc
                 return true;
             return false;
         }
-
+		DynNetArcIterator()
+			:net(NULL)
+		{
+		}
         DynNetArcIterator(NetType &thenet)
             :net(&thenet),nodeIter(net->begin())
         { if(net->begin()!=net->end()) arcIter=(*nodeIter).begin(); }
