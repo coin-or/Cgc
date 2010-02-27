@@ -9,13 +9,13 @@
 */
 namespace Cgc
 {
-    template <class T>
-    struct NodeCostComp : std::binary_function<T, T, bool> {
-        bool operator()(const T& x, const T& y) const 
-    	{ 
-    		return ((*(*x)) > (*(*y))); 
-    	}
-    };
-};
+	template <class T>
+	struct NodeCostComp : std::binary_function<T, T, bool> {
+		bool operator()(const T& x, const T& y) const 
+		{ 
+			return ((*(*x)) > (*(*y))); 
+		}
+	};
+}
 
 #endif

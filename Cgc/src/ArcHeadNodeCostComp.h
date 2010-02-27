@@ -10,18 +10,18 @@
 namespace Cgc
 {
 
-    /** @brief cost of arcs based on head node cost.
-       @ingroup InternalUse
-     */
-template <class T>
-struct ArcHeadCostComp : std::binary_function<T, T, bool> {
-    bool operator()(const T& x, const T& y) const 
-    	{ 
-	  return ( (*(*(x->head()))) > 
-		   (*(*(y->head()))) 
-		   );
-    	}
-};
-};
+	/** @brief cost of arcs based on head node cost.
+	@ingroup InternalUse
+	*/
+	template <class T>
+	struct ArcHeadCostComp : std::binary_function<T, T, bool> {
+		bool operator()(const T& x, const T& y) const 
+		{ 
+			return ( (*(*(x->head()))) > 
+				(*(*(y->head()))) 
+				);
+		}
+	};
+}
 
 #endif
