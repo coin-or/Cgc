@@ -175,6 +175,7 @@ int SSPSolverTest(TestBed &myBed)
     TestItem::setBed(&myBed);
     SSPSolverTest1<MyNetType>("SSPSolverTest:01:build and solve one MCF problem:StaticNet");
     SSPSolverTest1<MyNetType2>("SSPSolverTest:01:build and solve one MCF problem:DynNet");
+    
     SSPSolverTest1<MyNetType3>("SSPSolverTest:01:build and solve one MCF problem:StaticFBNet");
     return 0;
 }

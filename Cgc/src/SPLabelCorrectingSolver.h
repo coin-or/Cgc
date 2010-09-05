@@ -32,18 +32,19 @@ namespace Cgc
         }
         void solve(Cgc::NodeId source)
         {
-            typename NetType::iterator sourceIt = mNet.find(source);
+            NodeId lclNode = source;
+            typename NetType::iterator sourceIt = mNet.find(lclNode);
             (*(*sourceIt)).setLabel(0);
             (*(*sourceIt)).setPred(Cgc::NodeId(source));
             LIST.clear();
             ARCLIST.clear();
             LIST.insert(source);
 
-            NetType::arc_iterator arcToSet = findArcToSet();
+            typename NetType::arc_iterator arcToSet = findArcToSet();
             while(arcToSet != mNet.arc_end())
             {
-                NetType::iterator headNodeIt = (*arcToSet).head();
-                NetType::iterator tailNodeIt = (*arcToSet).tail();
+                typename NetType::iterator headNodeIt = (*arcToSet).head();
+                typename NetType::iterator tailNodeIt = (*arcToSet).tail();
                 if((*(*headNodeIt)).getLabel() > (*(*tailNodeIt)).getLabel()+(*(*arcToSet)).getCost())
                 {
                     //std::cout<<"Incrementing with arc from "<<mNet.getNodeId(tailNodeIt)<<" to "<<mNet.getNodeId(headNodeIt)<<std::endl;

@@ -5,6 +5,7 @@ All Rights Reserved.
 */
 #ifndef GRAPHDOTFORMAT_H
 #define GRAPHDOTFORMAT_H
+#include <ostream>
 namespace Cgc
 {
     /** prints to an ostream in graphviz's "dot" format.
@@ -34,8 +35,6 @@ namespace Cgc
 				
 				typename NetType::Node::const_iterator arcIt;
 				typename NetType::Node::const_iterator endIt;
-	            //typename NetType::const_arc_iterator arcIt(mNet.arc_end());
-				//typename NetType::const_arc_iterator endIt(mNet.arc_end());
 				arcIt = (*nodeIt).begin();
 				endIt = (*nodeIt).end();
 

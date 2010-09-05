@@ -38,7 +38,7 @@ template<class NetType>
 void testOutput(const std::string &testName, const std::string &fileName)
 {
     TestItem *ti = new TestItem(testName.c_str());
-    MyNetType *net = constructNet<MyNetType>();
+    NetType *net = constructNet<NetType>();
     GraphDotFormat<NetType> formatter("MyGraph",*net);
     std::stringstream outString;
     formatter.print(outString);
@@ -51,6 +51,6 @@ void DotOutputFormatTest(TestBed &bed)
 {
     TestItem::setBed(&bed);
     testOutput<MyNetType>("Dot format output:StaticNet ","testNet.dot");
-    testOutput<MyNetType>("Dot format output:DynNet","testNet2.dot");
-    testOutput<MyNetType>("Dot format output:StaticFBNet ","testNet3.dot");
+    testOutput<MyNetType2>("Dot format output:DynNet","testNet2.dot");
+    testOutput<MyNetType3>("Dot format output:StaticFBNet ","testNet3.dot");
 }

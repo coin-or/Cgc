@@ -6,7 +6,7 @@ CXXFLAGS=-I../src
 	@echo Compiling $<
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-OBJS= BFTraversalTest.o \
+OBJS=	BFTraversalTest.o \
 	ConnCompTest.o  \
 	DFTraversalTest.o \
 	DynNetTest.o \
@@ -20,19 +20,21 @@ OBJS= BFTraversalTest.o \
 	PathFindTest.o \
 	PathTest.o \
 	SPDynTest.o \
-	SPStaticFBTest.o \
 	SPStaticTest.o \
 	SPTest.o \
 	SPTestData.o \
 	SPTestDataTest.o \
 	SSPSolverTest.o \
-	StaticFBNetTest.o \
 	StaticNetTest.o \
 	TestData.o \
 	TestItem.o \
 	TestBed.o \
+	SPStaticFBTest.o \
+	StaticFBNetTest.o \
 	SPLabelCorrTest.o \
+	TopoSortTest.o \
 	unitTest.o
+
 
 all: unitTest
 

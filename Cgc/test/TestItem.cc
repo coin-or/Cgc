@@ -6,6 +6,7 @@
 #include "TestItem.h"
 #include "TestBed.h"
 #include <iostream>
+#include <string.h>
 TestBed *TestItem::theBed=NULL;
 
 TestItem::TestItem(const char *itemName)

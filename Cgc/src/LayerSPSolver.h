@@ -9,6 +9,7 @@ All Rights Reserved.
 #include <ArcPath.h>
 #include <ArcHeadNodeCostComp.h>
 #include <algorithm>
+#include <assert.h>
 
 #ifndef __LAYERSPMAXCOST
 #define __LAYERSPMAXCOST INT_MAX

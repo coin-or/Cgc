@@ -9,6 +9,7 @@
 #include "TestBed.h"
 
 #include <sstream>
+#include <string.h>
 
 static void test1()
 {

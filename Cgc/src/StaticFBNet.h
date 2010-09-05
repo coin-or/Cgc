@@ -37,11 +37,11 @@ namespace Cgc
 	class StaticFBNetArcTypes
 	{
 	public:
-		typedef SFBNArcType<NodeInfo, ArcInfo >  SFBNArcType;
-		typedef SFBNArcType * SFBNArcTypePnt;
-		typedef std::vector< SFBNArcType> SFBNArcBag;
+		typedef SFBNArcType<NodeInfo, ArcInfo >  __SFBNArcType;
+		typedef __SFBNArcType * __SFBNArcTypePnt;
+		typedef std::vector< __SFBNArcType> SFBNArcBag;
 		typedef typename SFBNArcBag::iterator SFBNArcBagIterator;
-		typedef std::vector< SFBNArcTypePnt> SFBNBackArcBag;
+		typedef std::vector< __SFBNArcTypePnt> SFBNBackArcBag;
 		typedef typename SFBNBackArcBag::iterator SFBNBackArcBagIterator;
 	};
 

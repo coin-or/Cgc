@@ -72,8 +72,22 @@ static void test2()
       std::cout<<"*Node1="<<*node1<<" , *node2="<<*node2<<std::endl;
       item1->failItem(__SPOT__);
     }
-  else
-    item1->passItem();
+  
+  (*node1).setVal(2);
+  // now should not be equal
+  if((*node1)==(*node2))
+      {
+      std::cout<<"*Node1="<<*node1<<" , *node2="<<*node2<<std::endl;
+      item1->failItem(__SPOT__);
+      }
+  // now equal again.
+  (*node2).setVal(2);
+  if((*node1)!=(*node2))
+      {
+      std::cout<<"*Node1="<<*node1<<" , *node2="<<*node2<<std::endl;
+      item1->failItem(__SPOT__);
+      }
+  item1->passItem();
 }
 
 static void test3()
@@ -155,7 +169,7 @@ int compareArcToZeroOne(MyNetType::const_arc_iterator arcIt)
   return 1;
 }
 
-int compareToOne(MyNetType::const_iterator nodeIt)
+int compareToOne(MyNetType::iterator nodeIt)
 {
   static const NodeLabel daNode(1);
   if(*(*nodeIt)==daNode)
@@ -279,6 +293,11 @@ static void test7()
       //std::cout<<"*nodeArcIter="<<(*(*nodeArcIter))<<std::endl;
       arcCnt--;
     }
+  NodeId nd(0);
+  MyNetType::iterator firstNodeIter = net.find(nd);
+  MyNetType::Node &nd2= net.find(nd).operator*();
+  NodeLabel &label = *(*firstNodeIter);
+  (*(*firstNodeIter)).setVal(2);
   if(arcCnt)
     item1->failItem(__SPOT__);
   //std::cout<<"7.4"<<std::endl;
@@ -725,7 +744,9 @@ static void test16()
   MyNetType::const_arc_iterator anArc = net.arc_find(NodeId(1),NodeId(2));
   if(anArc==net.arc_end())
     ti->failItem(__SPOT__);
-  if((*anArc).head()!=net.find(NodeId(2)))
+  MyNetType::iterator ni = ((*anArc).head());
+  MyNetType::iterator ni2= (net.find(NodeId(2)));
+  if(ni != ni2)
     ti->failItem(__SPOT__);
   if((*anArc).tail()!=net.find(NodeId(1)))
     ti->failItem(__SPOT__);

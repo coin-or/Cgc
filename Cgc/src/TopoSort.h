@@ -46,8 +46,8 @@ namespace Cgc
             // Compute the starting in-degrees
             for(NodeId nodeId = 0;nodeId < net.size();nodeId++)
             {
-                NetType::iterator nodeIt = net.find(nodeId);
-                for(NetType::Node::iterator arcIt = (*nodeIt).begin();
+                typename NetType::iterator nodeIt = net.find(nodeId);
+                for(typename NetType::Node::iterator arcIt = (*nodeIt).begin();
                     arcIt != (*nodeIt).end(); arcIt++)
                 {
                     NodeId nid = net.getNodeId((*arcIt).head());
@@ -71,8 +71,8 @@ namespace Cgc
                 NodeId currNode = activeList.front();
                 activeList.pop_front();
                 order[currNode.getNodeId()]=nodeCntr++;
-                NetType::iterator currNodeIt = net.find(currNode);
-                for(NetType::Node::iterator arcIt = (*currNodeIt).begin();
+                typename NetType::iterator currNodeIt = net.find(currNode);
+                for(typename NetType::Node::iterator arcIt = (*currNodeIt).begin();
                     arcIt != (*currNodeIt).end();arcIt++)
                 {
                     int location = net.getNodeId((*arcIt).head()).getNodeId();

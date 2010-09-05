@@ -21,36 +21,37 @@ NetType *constructNet()
     NetType *retval = new NetType(12,18);
     NodeType n;
     ArcType a;
-    retval->insert(n);//0
-    retval->insert(n);//1
-    retval->insert(n);//2
-    retval->insert(n);//3
-    retval->insert(n);//4
-    retval->insert(n);//5
-    retval->insert(n);//6
-    retval->insert(n);//7
-    retval->insert(n);//8
-    retval->insert(n);//9
-    retval->insert(n);//10
-    retval->insert(n);//11
-    retval->arc_insert(retval->find(NodeId(0)),a,retval->find(NodeId(1)));  // 0 - 1
-    retval->arc_insert(retval->find(NodeId(0)),a,retval->find(NodeId(2)));  // 0 - 2
-    retval->arc_insert(retval->find(NodeId(0)),a,retval->find(NodeId(4)));  // 0 - 4
-    retval->arc_insert(retval->find(NodeId(1)),a,retval->find(NodeId(2)));  // 1 - 2
-    retval->arc_insert(retval->find(NodeId(1)),a,retval->find(NodeId(5)));  // 1 - 5
-    retval->arc_insert(retval->find(NodeId(2)),a,retval->find(NodeId(5)));  // 2 - 5
-    retval->arc_insert(retval->find(NodeId(2)),a,retval->find(NodeId(8)));  // 2 - 8
-    retval->arc_insert(retval->find(NodeId(3)),a,retval->find(NodeId(2)));  // 3 - 2
-    retval->arc_insert(retval->find(NodeId(4)),a,retval->find(NodeId(3)));  // 4 - 3
-    retval->arc_insert(retval->find(NodeId(5)),a,retval->find(NodeId(7)));  // 5 - 7
-    retval->arc_insert(retval->find(NodeId(6)),a,retval->find(NodeId(11))); // 6 - 11
-    retval->arc_insert(retval->find(NodeId(7)),a,retval->find(NodeId(9)));  // 7 - 9
-    retval->arc_insert(retval->find(NodeId(7)),a,retval->find(NodeId(10))); // 7 - 10
-    retval->arc_insert(retval->find(NodeId(8)),a,retval->find(NodeId(10))); // 8 - 10
-    retval->arc_insert(retval->find(NodeId(8)),a,retval->find(NodeId(11))); // 8 - 11
-    retval->arc_insert(retval->find(NodeId(9)),a,retval->find(NodeId(6)));  // 9 - 6
-    retval->arc_insert(retval->find(NodeId(9)),a,retval->find(NodeId(11))); // 9 - 11
-    retval->arc_insert(retval->find(NodeId(10)),a,retval->find(NodeId(11)));// 10 - 11
+    typename NetType::iterator nodeIter[12];
+    nodeIter[0] = retval->insert(n);//0
+    nodeIter[1] = retval->insert(n);//1
+    nodeIter[2] = retval->insert(n);//2
+    nodeIter[3] = retval->insert(n);//3
+    nodeIter[4] = retval->insert(n);//4
+    nodeIter[5] = retval->insert(n);//5
+    nodeIter[6] = retval->insert(n);//6
+    nodeIter[7] = retval->insert(n);//7
+    nodeIter[8] = retval->insert(n);//8
+    nodeIter[9] = retval->insert(n);//9
+    nodeIter[10] = retval->insert(n);//10
+    nodeIter[11] = retval->insert(n);//11
+    retval->arc_insert(nodeIter[0],a,nodeIter[1]);  // 0 - 1
+    retval->arc_insert(nodeIter[0],a,nodeIter[2]);  // 0 - 2
+    retval->arc_insert(nodeIter[0],a,nodeIter[4]);  // 0 - 4
+    retval->arc_insert(nodeIter[1],a,nodeIter[2]);  // 1 - 2
+    retval->arc_insert(nodeIter[1],a,nodeIter[5]);  // 1 - 5
+    retval->arc_insert(nodeIter[2],a,nodeIter[5]);  // 2 - 5
+    retval->arc_insert(nodeIter[2],a,nodeIter[8]);  // 2 - 8
+    retval->arc_insert(nodeIter[3],a,nodeIter[2]);  // 3 - 2
+    retval->arc_insert(nodeIter[4],a,nodeIter[3]);  // 4 - 3
+    retval->arc_insert(nodeIter[5],a,nodeIter[7]);  // 5 - 7
+    retval->arc_insert(nodeIter[6],a,nodeIter[11]); // 6 - 11
+    retval->arc_insert(nodeIter[7],a,nodeIter[9]);  // 7 - 9
+    retval->arc_insert(nodeIter[7],a,nodeIter[10]); // 7 - 10
+    retval->arc_insert(nodeIter[8],a,nodeIter[10]); // 8 - 10
+    retval->arc_insert(nodeIter[8],a,nodeIter[11]); // 8 - 11
+    retval->arc_insert(nodeIter[9],a,nodeIter[6]);  // 9 - 6
+    retval->arc_insert(nodeIter[9],a,nodeIter[11]); // 9 - 11
+    retval->arc_insert(nodeIter[10],a,nodeIter[11]);// 10 - 11
     return retval;
 }
 
@@ -152,14 +153,15 @@ NetType *constructNetCycle()
     NetType *retval = new NetType(4,4);
     NodeType n;
     ArcType a;
-    retval->insert(n);//0
-    retval->insert(n);//1
-    retval->insert(n);//2
-    retval->insert(n);//3
-    retval->arc_insert(retval->find(NodeId(0)),a,retval->find(NodeId(1)));  // 0 - 1
-    retval->arc_insert(retval->find(NodeId(1)),a,retval->find(NodeId(2)));  // 1 - 2
-    retval->arc_insert(retval->find(NodeId(2)),a,retval->find(NodeId(0)));  // 2 - 0
-    retval->arc_insert(retval->find(NodeId(3)),a,retval->find(NodeId(0)));  // 2 - 0
+    typename NetType::iterator nodeIter[4];
+    nodeIter[0] = retval->insert(n);//0
+    nodeIter[1] = retval->insert(n);//1
+    nodeIter[2] = retval->insert(n);//2
+    nodeIter[3] = retval->insert(n);//3
+    retval->arc_insert(nodeIter[0],a,nodeIter[1]);  // 0 - 1
+    retval->arc_insert(nodeIter[1],a,nodeIter[2]);  // 1 - 2
+    retval->arc_insert(nodeIter[2],a,nodeIter[0]);  // 2 - 0
+    retval->arc_insert(nodeIter[3],a,nodeIter[0]);  // 2 - 0
     return retval;
 }
 
@@ -191,4 +193,5 @@ void TopoSortTest(TestBed &myBed)
     topoSortTest2<MyNetType>("TopoSortTest:02:detect Cycles:StaticNet");
     topoSortTest2<MyNetType2>("TopoSortTest:01:detect Cycles:DynNet");
     topoSortTest2<MyNetType3>("TopoSortTest:01:detect Cycles:StaticFBNet");
+
 }

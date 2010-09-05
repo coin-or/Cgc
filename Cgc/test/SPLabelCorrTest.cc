@@ -35,7 +35,7 @@ namespace Cbc_LabelCorr
         {
             pred = newPred;
         }
-        int getLabel()
+        int getLabel()const
         {
             return val;
         }
@@ -61,7 +61,7 @@ namespace Cbc_LabelCorr
             :cost(initCost)
         {
         }
-        int getCost()
+        int getCost()const
         {
             return cost;
         }
@@ -82,7 +82,7 @@ namespace Cbc_LabelCorr
 
 
 };
-//#define DYNTEST
+#define DYNTEST
 #define STATICFBTEST
 typedef Cgc::StaticFBNet< Cbc_LabelCorr::NodeLabel, Cbc_LabelCorr::ArcCost > StaticSPFBNet;
 typedef Cgc::DynNet< Cbc_LabelCorr::NodeLabel, Cbc_LabelCorr::ArcCost > DynSPFBNet;
@@ -92,17 +92,18 @@ using namespace Cbc_LabelCorr;
 template<class MyNet>
 void constructGraph(MyNet &net)
 {
-    int NUMNODES=5;
+    const int NUMNODES=5;
+    typename MyNet::iterator nodeIter[NUMNODES];
     for(int cnt=0;cnt<NUMNODES;cnt++)
     {
-        net.insert(NodeLabel(NODE_INFINITY));
+        nodeIter[cnt] = net.insert(NodeLabel(NODE_INFINITY));
     }
-    net.arc_insert(net.find(NodeId(0)),Cbc_LabelCorr::ArcCost(2), net.find(NodeId(1)));
-    net.arc_insert(net.find(NodeId(0)),Cbc_LabelCorr::ArcCost(2), net.find(NodeId(2)));
-    net.arc_insert(net.find(NodeId(1)),Cbc_LabelCorr::ArcCost(4), net.find(NodeId(3)));
-    net.arc_insert(net.find(NodeId(1)),Cbc_LabelCorr::ArcCost(3), net.find(NodeId(4)));
-    net.arc_insert(net.find(NodeId(2)),Cbc_LabelCorr::ArcCost(1), net.find(NodeId(4)));
-    net.arc_insert(net.find(NodeId(3)),Cbc_LabelCorr::ArcCost(-3),net.find(NodeId(4)));
+    net.arc_insert(nodeIter[0],Cbc_LabelCorr::ArcCost(2), nodeIter[1]);
+    net.arc_insert(nodeIter[0],Cbc_LabelCorr::ArcCost(2), nodeIter[2]);
+    net.arc_insert(nodeIter[1],Cbc_LabelCorr::ArcCost(4), nodeIter[3]);
+    net.arc_insert(nodeIter[1],Cbc_LabelCorr::ArcCost(3), nodeIter[4]);
+    net.arc_insert(nodeIter[2],Cbc_LabelCorr::ArcCost(1), nodeIter[4]);
+    net.arc_insert(nodeIter[3],Cbc_LabelCorr::ArcCost(-3),nodeIter[4]);
     std::cout<<"Net="<<net<<std::endl;
 }
 template<class MyNet>

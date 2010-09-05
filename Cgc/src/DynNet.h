@@ -6,28 +6,36 @@ All Rights Reserved.
 #ifndef DYNNET_H
 #define DYNNET_H
 
+#include <NodeId.h>
+#include <map>
 #include <set>
-#include <PLess.h>
+#include <list>
 #include <functional>
 
-#include <NodeId.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include <PLess.h>
 #include <NodeIdMgr.h>
 
 namespace Cgc
 {
 
 	// Forward template type declarations
-	template < class NodeInfo, class ArcInfo >
+	template < class NetType, class NodeInfo, class ArcInfo >
 	class __ArcType;
 
-	template < class NodeInfo, class ArcInfo >
+	template < class NetType, class NodeInfo, class ArcInfo >
 	class __NodeType;
 
 	template < class NetType, class NodeInfo, class ArcInfo >
 	class DynNetArcIterator;
 
+	template < class NetType, class NodeInfo, class ArcInfo >
+	class DynNetNodeIterator;
 
-	template < class NodeInfo, class ArcInfo>
+	template < class NetType, class NodeInfo, class ArcInfo>
 	class ArcIterator;
 
 	//MSVC OSTREAM / FRIEND BUG
@@ -43,22 +51,30 @@ namespace Cgc
 	bool operator==(const DynNetArcIterator<NodeType, NodeInfo, ArcInfo > &arcIt1,
 		const DynNetArcIterator<NodeType, NodeInfo, ArcInfo > &arcIt2);
 
-	template < class NodeInfo, class ArcInfo >
-	ostream &operator<<(ostream &os, const __NodeType<NodeInfo,ArcInfo> &n);
-	template < class NodeInfo, class ArcInfo >
-	bool operator!=(const __NodeType<NodeInfo,ArcInfo> &n1, const __NodeType<NodeInfo,ArcInfo> &n2);
-	template < class NodeInfo, class ArcInfo >
-	bool operator<(const __NodeType<NodeInfo,ArcInfo> &n1, const __NodeType<NodeInfo,ArcInfo> &n2);
+	template < class NetType, class NodeInfo, class ArcInfo >
+	ostream &operator<<(ostream &os, const __NodeType<NetType, NodeInfo,ArcInfo> &n);
+	template < class NetType, class NodeInfo, class ArcInfo >
+	bool operator!=(const __NodeType<NetType, NodeInfo,ArcInfo> &n1, const __NodeType<NetType, NodeInfo,ArcInfo> &n2);
+	template < class NetType, class NodeInfo, class ArcInfo >
+	bool operator<(const __NodeType<NetType, NodeInfo,ArcInfo> &n1, const __NodeType<NetType, NodeInfo,ArcInfo> &n2);
 	template < class NodeInfo, class ArcInfo >
 	ostream &operator<<(ostream &os, const __ArcType<NodeInfo,ArcInfo> &n);
 #endif
 
-	template < class NodeInfo, class ArcInfo >
-	bool operator!=(const ArcIterator<NodeInfo, ArcInfo > &arcIt1,
-		const ArcIterator<NodeInfo, ArcInfo > &arcIt2);
-	template < class NodeInfo, class ArcInfo>
-	bool operator==(const ArcIterator<NodeInfo, ArcInfo > &arcIt1,
-		const ArcIterator<NodeInfo, ArcInfo > &arcIt2);
+	template < class NodeType, class NodeInfo, class ArcInfo>
+	bool operator!=(const DynNetNodeIterator<NodeType, NodeInfo, ArcInfo > &arcIt1,
+		const DynNetNodeIterator<NodeType, NodeInfo, ArcInfo > &arcIt2);
+
+	template <class NodeType, class NodeInfo, class ArcInfo>
+	bool operator==(const DynNetNodeIterator<NodeType, NodeInfo, ArcInfo > &arcIt1,
+		const DynNetNodeIterator<NodeType, NodeInfo, ArcInfo > &arcIt2);
+
+	template < class NetType, class NodeInfo, class ArcInfo >
+	bool operator!=(const ArcIterator<NetType,NodeInfo, ArcInfo > &arcIt1,
+		const ArcIterator<NetType,NodeInfo, ArcInfo > &arcIt2);
+	template < class NetType, class NodeInfo, class ArcInfo>
+	bool operator==(const ArcIterator<NetType,NodeInfo, ArcInfo > &arcIt1,
+                    const ArcIterator<NetType,NodeInfo, ArcInfo > &arcIt2);
 
 
 	template < class NodeInfo, class ArcInfo >
@@ -74,23 +90,23 @@ namespace Cgc
 	// - functions that must have fully declared types to be complete
 
 	/// @ingroup InternalUse
-	template < class NodeInfo, class ArcInfo>
+	template < class NetType, class NodeInfo, class ArcInfo>
 	class DynNetArcTypes
 	{
 	public:
-		typedef __ArcType<NodeInfo, ArcInfo > * __ArcTypePnt;
-		typedef std::set<__ArcTypePnt ,Cgc::PLess< __ArcTypePnt > > ArcBag;
+		typedef __ArcType<NetType, NodeInfo, ArcInfo > * __ArcTypePnt;
+		typedef std::set<__ArcTypePnt ,PLess< __ArcTypePnt > > ArcBag;
 	};
 
 
 
 
 	/// @ingroup InternalUse
-	template < class NodeInfo, class ArcInfo >
+	template < class NetType,class NodeInfo, class ArcInfo >
 	class ArcIterator
 	{
-		typedef typename DynNetArcTypes<NodeInfo, ArcInfo >::ArcBag MyArcBag;
-		typedef typename MyArcBag::iterator MyArcBagIter;
+		typedef typename DynNetArcTypes<NetType,NodeInfo, ArcInfo >::ArcBag MyArcBag;
+        typedef typename MyArcBag::iterator MyArcBagIter;
 		MyArcBagIter ait; 
 		ArcIterator(const MyArcBagIter &iter):ait(iter)
 		{}
@@ -98,21 +114,14 @@ namespace Cgc
 		ArcIterator(){}
 		ArcIterator(const ArcIterator &otherIter) 
 			:ait(otherIter.ait) { }
-		__ArcType<NodeInfo, ArcInfo > &operator*();//{ return (*(*ait));}
-		const __ArcType<NodeInfo, ArcInfo > &operator*()const ;//{ return (*(*ait));}
+		__ArcType<NetType,NodeInfo, ArcInfo > &operator*(){ return (*(*ait));}
+		const __ArcType<NetType,NodeInfo, ArcInfo > &operator*()const { return (*(*ait));}
 		int msvcCompareHack(const ArcIterator &otherIt)const
 		{ 	  
 			MyArcBagIter a = ait;
 			MyArcBagIter b = otherIt.ait;
 			return (a != b);
 		}
-		/*
-		friend inline bool operator!=(const ArcIterator<NodeInfo,ArcInfo> &arcIt1,
-		const ArcIterator<NodeInfo,ArcInfo> &arcIt2);
-
-		friend inline bool operator==(const ArcIterator<NodeInfo, ArcInfo > &arcIt1,
-		const ArcIterator<NodeInfo, ArcInfo > &arcIt2);
-		*/
 
 		ArcIterator & operator=(const ArcIterator &otherIter)
 		{ 
@@ -132,7 +141,8 @@ namespace Cgc
 			ait++; 
 			return *this;
 		}
-		friend class __NodeType<NodeInfo,ArcInfo>;
+
+		friend class __NodeType<NetType, NodeInfo,ArcInfo>;
 		friend class DynNet<NodeInfo,ArcInfo>;
 	};
 
@@ -140,11 +150,11 @@ namespace Cgc
 	@ingroup InternalUse
 	@see DynNet
 	*/
-	template < class NodeInfo, class ArcInfo >
+	template <class NetType, class NodeInfo, class ArcInfo >
 	class __NodeType
 	{
-		typedef typename DynNetArcTypes<NodeInfo, ArcInfo >::ArcBag MyArcBag;
-		typedef typename DynNetArcTypes<NodeInfo, ArcInfo >::__ArcTypePnt MyArcPnt;
+		typedef typename DynNetArcTypes<NetType, NodeInfo, ArcInfo >::ArcBag MyArcBag;
+		typedef typename DynNetArcTypes<NetType, NodeInfo, ArcInfo >::__ArcTypePnt MyArcPnt;
 		typedef typename MyArcBag::iterator MyArcBagIter;
 		NodeInfo info;
 		Cgc::NodeId nodeId;
@@ -169,13 +179,13 @@ namespace Cgc
 			fwdArcs(otherNode.fwdArcs),
 			backArcs(otherNode.backArcs)
 		{}
-		typedef ArcIterator<NodeInfo, ArcInfo > iterator;
-		typedef ArcIterator<NodeInfo, ArcInfo > const_iterator;
-		typedef ArcIterator<NodeInfo, ArcInfo > back_iterator;
-		typedef ArcIterator<NodeInfo, ArcInfo > const_back_iterator;
+		typedef ArcIterator<NetType, NodeInfo, ArcInfo > iterator;
+		typedef ArcIterator<NetType, NodeInfo, ArcInfo > const_iterator;
+		typedef ArcIterator<NetType, NodeInfo, ArcInfo > back_iterator;
+		typedef ArcIterator<NetType, NodeInfo, ArcInfo > const_back_iterator;
 	private:
 		// remove the back-arc reference from the head node
-		void back_erase(const __ArcType<NodeInfo,ArcInfo> *arcToErase);
+		void back_erase(const __ArcType<NetType, NodeInfo,ArcInfo> *arcToErase);
 
 
 		// remove the forward reference of a sequence of arcs...it also calls
@@ -191,8 +201,8 @@ namespace Cgc
 		{
 			for(iterator start=first;start!=last;start++)
 			{
-				__NodeType< NodeInfo, ArcInfo > &node = 
-					const_cast< __NodeType< NodeInfo, ArcInfo > & >((*(*start).head()));
+            __NodeType< NetType, NodeInfo, ArcInfo > &node = 
+                const_cast< __NodeType< NetType ,NodeInfo, ArcInfo > & >((*(*start).head()));
 				node.back_erase(&(*start));
 			}
 			for(iterator deleting=first;deleting!=last;deleting++)
@@ -206,25 +216,25 @@ namespace Cgc
 		void erase(const DynNetArcIterator<DynNet<NodeInfo,ArcInfo>,NodeInfo,ArcInfo>  &fst, const DynNetArcIterator<DynNet<NodeInfo,ArcInfo>,NodeInfo,ArcInfo>  &snd)
 		{ erase(fst.arcIter,snd.arcIter); }
 
-		typename __NodeType< NodeInfo, ArcInfo  >::iterator 
-			insert(const __ArcType<NodeInfo, ArcInfo > &newArc);
-		void back_insert(const __ArcType<NodeInfo,ArcInfo> *newArc);
+		typename __NodeType< NetType, NodeInfo, ArcInfo  >::iterator 
+			insert(const __ArcType<NetType, NodeInfo, ArcInfo > &newArc);
+		void back_insert(const __ArcType<NetType, NodeInfo,ArcInfo> *newArc);
 
 		void disconnect()
 		{
 			iterator last = fwdArcs.end();
 			for(iterator start=fwdArcs.begin();start!=last;start++)
 			{
-				__NodeType< NodeInfo, ArcInfo > &node = 
-					const_cast< __NodeType< NodeInfo, ArcInfo > &>(*((*start).head()));
+            __NodeType< NetType, NodeInfo, ArcInfo > &node = 
+					const_cast< __NodeType< NetType, NodeInfo, ArcInfo > &>(*((*start).head()));
 				node.back_erase(&(*start));
 				delete &(*start);
 			}
 			iterator last2 = backArcs.end();
 			for(iterator start = backArcs.begin(); start != last2;start++)
 			{
-				__NodeType< NodeInfo, ArcInfo > &node = 
-					const_cast< __NodeType< NodeInfo, ArcInfo > &>(*((*start).tail()));
+            __NodeType< NetType, NodeInfo, ArcInfo > &node = 
+					const_cast< __NodeType< NetType, NodeInfo, ArcInfo > &>(*((*start).tail()));
 				node.justErase(start);
 				delete &(*start);
 			}
@@ -236,40 +246,40 @@ namespace Cgc
 		NodeInfo &operator*(){ return info;}
 		/// returns iterator to first arc leaving this node.
 		iterator begin()
-		{ return ArcIterator<NodeInfo, ArcInfo >(fwdArcs.begin());}
+		{ return ArcIterator<NetType, NodeInfo, ArcInfo >(fwdArcs.begin());}
 		/// returns const_iterator to first arc leaving this node.
 		const_iterator begin()const
 		{  
-			__NodeType<NodeInfo,ArcInfo> *nonConstThis = const_cast<__NodeType<NodeInfo,ArcInfo> *>(this);
+			__NodeType<NetType, NodeInfo,ArcInfo> *nonConstThis = const_cast<__NodeType<NetType, NodeInfo,ArcInfo> *>(this);
 			MyArcBagIter iter = nonConstThis->fwdArcs.begin();
-			return ArcIterator<NodeInfo,ArcInfo>(iter);
+			return ArcIterator<NetType, NodeInfo,ArcInfo>(iter);
 		}
 		/// returns iterator to first backward arc entering this node.
 		back_iterator back_begin()
-		{ return ArcIterator<NodeInfo, ArcInfo >(backArcs.begin());}
+		{ return ArcIterator<NetType, NodeInfo, ArcInfo >(backArcs.begin());}
 		/// returns const_iterator to first backward arc entering this node.
 		const_back_iterator back_begin()const
-		{ return ArcIterator<NodeInfo, ArcInfo >(backArcs.begin());}
+		{ return ArcIterator<NetType, NodeInfo, ArcInfo >(backArcs.begin());}
 
 		/// returns iterator one past the last arc 
 		iterator end()
-		{ return ArcIterator<NodeInfo, ArcInfo >(fwdArcs.end()); }
+		{ return ArcIterator<NetType, NodeInfo, ArcInfo >(fwdArcs.end()); }
 
 		/// returns const_iterator one past the last arc 
 		const_iterator end()const
 		{ 
-			__NodeType<NodeInfo,ArcInfo> *nonConstThis = const_cast<__NodeType<NodeInfo,ArcInfo> *>(this);
+			__NodeType<NetType, NodeInfo,ArcInfo> *nonConstThis = const_cast<__NodeType<NetType, NodeInfo,ArcInfo> *>(this);
 			MyArcBagIter iter = nonConstThis->fwdArcs.end();
-			return ArcIterator<NodeInfo,ArcInfo>(iter);
+			return ArcIterator<NetType, NodeInfo,ArcInfo>(iter);
 
 		}
 
 		/// returns iterator one past the last backward arc.
 		back_iterator back_end()
-		{ return ArcIterator<NodeInfo, ArcInfo >(backArcs.end()); }
+		{ return ArcIterator<NetType, NodeInfo, ArcInfo >(backArcs.end()); }
 		/// returns const_iterator one past the last backward arc.
 		const_back_iterator back_end()const
-		{ return ArcIterator<NodeInfo, ArcInfo >(backArcs.end()); }
+		{ return ArcIterator<NetType, NodeInfo, ArcInfo >(backArcs.end()); }
 		/// returns the number of backward arcs.
 		size_t back_size()const{ return backArcs.size();}
 
@@ -285,22 +295,22 @@ namespace Cgc
 			//cout<<"Didn't find it!"<<endl;
 			//else
 			//cout<<"found i = "<<(*i)<<endl;
-			__NodeType<NodeInfo,ArcInfo> *nonConstThis = const_cast<__NodeType<NodeInfo,ArcInfo> *>(this);
+			__NodeType<NetType, NodeInfo,ArcInfo> *nonConstThis = const_cast<__NodeType<NetType, NodeInfo,ArcInfo> *>(this);
 			MyArcBagIter iter = nonConstThis->fwdArcs.find(p);
-			return ArcIterator<NodeInfo,ArcInfo>(iter);
+			return ArcIterator<NetType, NodeInfo,ArcInfo>(iter);
 		}
 	public:
 
 		/** @brief comparisons for nodes.
 		@ingroup PublicInterface
 		*/
-		friend bool operator==(const __NodeType<NodeInfo,ArcInfo> &nd1,const __NodeType<NodeInfo,ArcInfo> &nd2) 
+		friend bool operator==(const __NodeType<NetType, NodeInfo,ArcInfo> &nd1,const __NodeType<NetType, NodeInfo,ArcInfo> &nd2) 
 		{ return nd1.nodeId == nd2.nodeId;}
 
 		/** @brief comparisons for nodes.
 		@ingroup PublicInterface
 		*/
-		friend bool operator!=(const __NodeType<NodeInfo,ArcInfo> &nd1,const __NodeType<NodeInfo,ArcInfo> &nd2) 
+		friend bool operator!=(const __NodeType<NetType, NodeInfo,ArcInfo> &nd1,const __NodeType<NetType, NodeInfo,ArcInfo> &nd2) 
 		{ return nd1.nodeId != nd2.nodeId;}
 
 		/*
@@ -309,27 +319,26 @@ namespace Cgc
 
 		void print(std::ostream &os)const;
 		//friend std::ostream &operator<<(std::ostream &os, const __NodeType<NodeInfo, ArcInfo > &node);
-		friend class __ArcType<NodeInfo, ArcInfo >;
+		friend class __ArcType<NetType,NodeInfo, ArcInfo >;
 		friend class DynNet<NodeInfo, ArcInfo >;
 	};
 
 	/// @ingroup InternalUse
-	template <class NodeInfo, class ArcInfo >
+	template <class NetType, class NodeInfo, class ArcInfo >
 	class DynNetNodeTypes
 	{
 	public:
-		typedef __NodeType<NodeInfo, ArcInfo > LocalNodeType;
-		typedef std::set<LocalNodeType , std::less< LocalNodeType > > NodeBag;
+		typedef __NodeType<NetType, NodeInfo, ArcInfo > LocalNodeType;
+		typedef std::map<NodeId, LocalNodeType > NodeBag;
 	};
 
 	/** @brief Arc Definition for DynNet arc types.
 	@ingroup InternalUse
 	*/
-	template < class NodeInfo ,class ArcInfo>
+	template < class NetType,class NodeInfo ,class ArcInfo>
 	class __ArcType
 	{
-		typedef typename DynNetNodeTypes<NodeInfo, ArcInfo >::NodeBag MyNodeBag;
-		typedef typename MyNodeBag::iterator MyNodeBagIter;
+		typedef DynNetNodeIterator<NetType,NodeInfo,ArcInfo> MyNodeBagIter;
 		MyNodeBagIter tl;
 		MyNodeBagIter hd;
 		ArcInfo arcInfo;
@@ -361,13 +370,11 @@ namespace Cgc
 	template < class NetType, class NodeInfo, class ArcInfo >
 	class DynNetArcIterator
 	{
-		typedef typename DynNetNodeTypes<NodeInfo, ArcInfo >::NodeBag MyNodeBag;
-		typedef typename MyNodeBag::iterator MyNodeBagIter;
-		typedef typename DynNetArcTypes<NodeInfo, ArcInfo >::ArcBag MyArcBag;
-		typedef ArcIterator<NodeInfo, ArcInfo > MyNodeArcIterator;
+		typedef typename DynNetArcTypes<NetType, NodeInfo, ArcInfo >::ArcBag MyArcBag;
+		typedef ArcIterator<NetType, NodeInfo, ArcInfo > MyNodeArcIterator;
 
 		NetType *net;
-		MyNodeBagIter nodeIter;
+		DynNetNodeIterator<NetType,NodeInfo,ArcInfo> nodeIter;
 		MyNodeArcIterator arcIter;
 		bool atEnd()const
 		{ return(nodeIter==net->end()); }
@@ -405,17 +412,17 @@ namespace Cgc
 			:net(&thenet),nodeIter(net->begin())
 		{ if(net->begin()!=net->end()) arcIter=(*nodeIter).begin(); }
 
-		DynNetArcIterator(NetType &thenet, const MyNodeBagIter &node)
+		DynNetArcIterator(NetType &thenet, const DynNetNodeIterator<NetType,NodeInfo,ArcInfo> &node)
 			:net(&thenet),nodeIter(node)
 		{ if(node != net->end()) arcIter=(*node).begin(); }
 
 		DynNetArcIterator(NetType &thenet, 
-			const MyNodeBagIter &node, 
+                          const DynNetNodeIterator<NetType,NodeInfo,ArcInfo> &node, 
 			const MyNodeArcIterator &arc)
 			:net(&thenet),nodeIter(node),arcIter(arc)
 		{ }
 
-		DynNetArcIterator(const MyNodeBagIter &node,
+		DynNetArcIterator(const DynNetNodeIterator<NetType,NodeInfo,ArcInfo> &node,
 			const MyNodeArcIterator &arc)
 			:nodeIter(node),arcIter(arc)
 		{ }
@@ -465,44 +472,123 @@ namespace Cgc
 			++(*this);
 			return tmp;
 		}
-		const __ArcType<NodeInfo, ArcInfo > &operator*()const { return (*arcIter); }
-		__ArcType<NodeInfo, ArcInfo > &operator*(){ return (*arcIter); }
+		const __ArcType<NetType, NodeInfo, ArcInfo > &operator*()const { return (*arcIter); }
+		__ArcType<NetType, NodeInfo, ArcInfo > &operator*(){ return (*arcIter); }
 
-		/*
-		inline friend bool operator==(const DynNetArcIterator<NetType,NodeInfo,ArcInfo> &rep1,
-		const DynNetArcIterator<NetType,NodeInfo,ArcInfo> &rep2);
-		friend bool operator==(const DynNetArcIterator<NetType,NodeInfo,ArcInfo> 
-		&rep1,
-		const DynNetArcIterator<NetType,NodeInfo,ArcInfo> 
-		&rep2);
-		friend bool operator!=(const DynNetArcIterator<NetType,NodeInfo,ArcInfo>  
-		&rep1,
-		const DynNetArcIterator<NetType,NodeInfo,ArcInfo>  
-		&rep2);
-		*/
 		//friend class NetType;
 		MyNodeArcIterator getArcIter(){ return arcIter;}
 	};
 
+	template < class NetType, class NodeInfo, class ArcInfo>
+	class DynNetNodeIterator
+    {
+		typedef typename DynNetNodeTypes<NetType, NodeInfo, ArcInfo >::NodeBag MyNodeBag;
+		typedef typename MyNodeBag::iterator MyNodeBagIter;
+		NetType *net;
+		MyNodeBagIter nodeIter;
+		bool atEnd()const
+		{ return(nodeIter==net->nodes.end()); }
+	public :
+        // EQ
+		bool compareHack(const DynNetNodeIterator &otherIter)const
+		{	
+			if(nodeIter == otherIter.nodeIter)
+                {
+                return true;
+                }	
+			return false;
+		}
+        // NE
+		bool compareHack2(const DynNetNodeIterator &otherIter)const
+		{		
+			if(atEnd() && otherIter.atEnd())
+				return false;
+			if(atEnd()||otherIter.atEnd())
+				return true;
+			if(nodeIter != otherIter.nodeIter)
+				return true;
+			return false;
+		}
+		DynNetNodeIterator()
+        :net(NULL)
+		{
+		}
+		DynNetNodeIterator(NetType &thenet)
+			:net(&thenet),nodeIter(net->nodes.begin())
+		{}
+
+		DynNetNodeIterator(NetType &thenet, const MyNodeBagIter &node)
+			:net(&thenet),nodeIter(node)
+		{}
+
+		DynNetNodeIterator &operator=(const DynNetNodeIterator &otherIter)
+		{
+			net=otherIter.net;
+			nodeIter=otherIter.nodeIter;
+			return *this;
+		}
+
+        __NodeType<NetType, NodeInfo,ArcInfo> &operator*()
+        {
+            return (*nodeIter).second;
+        }
+
+        const __NodeType<NetType, NodeInfo,ArcInfo> &operator*()const 
+        {
+            return(*nodeIter).second;
+        }
+
+		DynNetNodeIterator operator++()
+		{
+            assert(net != NULL);
+            if(nodeIter!=net->nodes.end())
+                {
+                nodeIter++;
+                }
+			return *this;
+		}
+		DynNetNodeIterator operator++(int)
+		{
+			DynNetNodeIterator tmp(*this);
+			++(*this);
+			return tmp;
+		}
+		DynNetNodeIterator operator--()
+		{
+            if(nodeIter!=net->nodes.begin())
+                nodeIter--;
+			return *this;
+		}
+		DynNetNodeIterator operator--(int)
+		{
+			DynNetNodeIterator tmp(*this);
+			--(*this);
+			return tmp;
+		}
+	};
 	/** @brief Dynamic Network -- allows altering the graph after construction.
 	@ingroup Graphs
 
 	*/
+
+
 	template < class NodeInfo,class ArcInfo>
 	class DynNet
 	{
-		typedef typename DynNetNodeTypes<NodeInfo, ArcInfo >::NodeBag MyNodeBag;
-		typedef typename MyNodeBag::iterator MyNodeBagIter;
+    private:
+		typedef typename DynNetNodeTypes<DynNet, NodeInfo, ArcInfo >::NodeBag MyNodeBag;
+		typedef DynNetNodeIterator<DynNet,NodeInfo,ArcInfo> MyNodeBagIter;
+        friend class DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>;
 		Cgc::NodeIdMgr<DynNet> idMgr;
 		MyNodeBag nodes;
 		unsigned int hintNodes;
 		unsigned int hintArcs;
 		size_t arcSize;
 	public:
-		typedef __NodeType<NodeInfo, ArcInfo > Node;
-		typedef __ArcType<NodeInfo, ArcInfo > Arc;
-		typedef MyNodeBagIter iterator;
-		typedef MyNodeBagIter const_iterator;
+		typedef __NodeType<DynNet,NodeInfo, ArcInfo > Node;
+		typedef __ArcType<DynNet,NodeInfo, ArcInfo > Arc;
+        typedef DynNetNodeIterator<DynNet,NodeInfo,ArcInfo> iterator;
+        typedef DynNetNodeIterator<DynNet,NodeInfo,ArcInfo> const_iterator;
 		typedef DynNetArcIterator<DynNet, NodeInfo, ArcInfo > const_arc_iterator;
 		typedef DynNetArcIterator<DynNet, NodeInfo, ArcInfo  > arc_iterator;
 		typedef NodeInfo node_data;
@@ -520,19 +606,23 @@ namespace Cgc
 		const_iterator begin()const
 		{ 
 			DynNet *nonConstThis = const_cast<DynNet *>(this);
-			return nonConstThis->nodes.begin();
+			return DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>((*nonConstThis),nonConstThis->nodes.begin());
 			//return nodes.begin(); 
 		}
 		iterator begin()
-		{ return nodes.begin(); }
+		{
+            return DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>(*this,nodes.begin());
+        }
 
 		const_iterator end()const
 		{ 
 			DynNet *nonConstThis = const_cast<DynNet *>(this);
-			return nonConstThis->nodes.end(); 
+			return DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>(*nonConstThis,nonConstThis->nodes.end()); 
 		}
 		iterator end()
-		{ return nodes.end(); }
+		{
+            return DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>(*this,nodes.end());
+        }
 		void erase(const Cgc::NodeId &nodeId)
 		{ 
 			// go find the node..
@@ -552,11 +642,12 @@ namespace Cgc
 			// have to maintain arcSize manually...the node deletes the arcs
 			arcSize-=(*nodeIt).size();
 			arcSize-=(*nodeIt).back_size();
+
 			// remove the node's arcs
 			Node &node=const_cast<Node &>((*nodeIt));
 			node.disconnect();
 			// remove the node
-			nodes.erase(nodeIt); 
+            nodes.erase(nodes.find(getNodeId(nodeIt)));//getNodeId(*nodeIt)); 
 		}
 		void arc_erase(const arc_iterator &start, const arc_iterator &finish)
 		{
@@ -580,26 +671,28 @@ namespace Cgc
 		}
 		void erase(const iterator &first, const iterator &second)
 		{ 
+            std::list<NodeId> nodes;
 			for(iterator nodeIt=first;nodeIt != second;nodeIt++)
-			{
-				// have to maintain arcSize manually...the node deletes the arcs
-				arcSize-=(*nodeIt).size();
-				arcSize-=(*nodeIt).back_size();
-
-				__NodeType<NodeInfo,ArcInfo> &node = 
-					const_cast< __NodeType<NodeInfo,ArcInfo> &>(*nodeIt);
-				node.erase((*nodeIt).begin(),(*nodeIt).end());
-			}
-			nodes.erase(first,second); 
+                {
+                nodes.push_back(getNodeId(nodeIt));
+                }
+            for(std::list<NodeId>::iterator nit= nodes.begin();
+                nit!=  nodes.end();nit++)
+                {
+                iterator nodeIt = find((*nit));
+                erase(nodeIt); 
+                }
 		}
-		const_iterator insert(const NodeInfo &nd)
+		iterator insert(const NodeInfo &nd)
 		{ 
-			return nodes.insert(nodes.end(),
-				__NodeType<NodeInfo, ArcInfo >(
-				Node(idMgr.getNewId(),
-				nd))); 
+            NodeId newId = idMgr.getNewId();
+            std::pair<NodeId,__NodeType<DynNet,NodeInfo, ArcInfo > > myPair;
+            myPair.first = newId;
+            myPair.second = __NodeType<DynNet,NodeInfo, ArcInfo >(newId,nd);
+			nodes.insert(myPair);
+            return DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>(*this, nodes.find(newId));
 		}
-
+        
 		size_t size()const{ return nodes.size();}
 		size_t arc_size()const{ return arcSize;}
 
@@ -611,8 +704,8 @@ namespace Cgc
 		{
 			arcSize++;
 			Node &node=const_cast<Node &>(*tail);
-			ArcIterator<NodeInfo, ArcInfo > 
-				arcIt( node.insert(__ArcType<NodeInfo, ArcInfo >(tail,
+			ArcIterator<DynNet,NodeInfo, ArcInfo > 
+				arcIt( node.insert(__ArcType<DynNet,NodeInfo, ArcInfo >(tail,
 				info,
 				head)));
 			//DynNet &net=*this;
@@ -667,7 +760,7 @@ namespace Cgc
 		{
 			DynNet<NodeInfo,ArcInfo> *netpnt= 
 				const_cast< DynNet<NodeInfo,ArcInfo> * >(this);
-			const_iterator tail=find(tailId);
+			iterator tail=find(tailId);
 			/*
 			if(tail!=end())
 			cout<<"Found tail, id="<<getNodeId(tail)<<endl;
@@ -694,7 +787,7 @@ namespace Cgc
 		{
 			DynNet<NodeInfo,ArcInfo> *netpnt= 
 				const_cast< DynNet<NodeInfo,ArcInfo> * >(this);
-			const_iterator tail=find(tailId);
+			iterator tail=find(tailId);
 			//if(tail!=end())
 			//cout<<"Found tail, id="<<getNodeId(tail)<<endl;
 			//else
@@ -716,18 +809,13 @@ namespace Cgc
 
 		const_iterator find(const NodeId &id)const
 		{
-			static Node tmpNode;
-			tmpNode.setNodeId(id);
 			DynNet *nonConstThis = const_cast<DynNet *>(this);
-			const_iterator it = nonConstThis->nodes.find(tmpNode);
-			return( it );
+            return DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>((*nonConstThis), nonConstThis->nodes.find(id));
 		}
 
 		iterator find(const NodeId &id)
 		{
-			static Node tmpNode;
-			tmpNode.setNodeId(id);
-			return( nodes.find(tmpNode) );
+			return( DynNetNodeIterator<DynNet,NodeInfo,ArcInfo>(*this,nodes.find(id) ));
 		}
 
 		iterator find(const NodeInfo &info)
@@ -753,7 +841,7 @@ namespace Cgc
 			os<<"NetClass:Undir>"<<size()<<' '<<arc_size()<<std::endl;
 			DynNet<NodeInfo,ArcInfo> *netpnt = 
 				const_cast<DynNet<NodeInfo,ArcInfo> *>(this);
-			for(const_iterator nodeIt = netpnt->begin();
+			for(iterator nodeIt = netpnt->begin();
 				nodeIt != netpnt->end();nodeIt++)
 			{
 				os<<getNodeId(nodeIt)<<' '<<(*nodeIt).size()<<std::endl;
@@ -791,25 +879,33 @@ namespace Cgc
 			{
 				is>>id>>numAdj;
 				maxId=std::max(id,maxId);
-				__NodeType<NodeInfo, ArcInfo > nodeIn( Node(id, nd)); 
-
+                
 				// may have been early insert item..so must check
-				nodeIt = nodes.find(nodeIn);
-				if(nodeIt==nodes.end())
-					nodeIt = nodes.insert(nodes.end(),nodeIn);
-
+                nodeIt = find(id);
+				if(nodeIt==end())
+                    {
+                    std::pair<NodeId,__NodeType<DynNet,NodeInfo, ArcInfo > > newPair;
+                    newPair.first = id;
+                    newPair.second = __NodeType<DynNet,NodeInfo, ArcInfo >(id, nd); 
+                    nodes.insert(newPair);
+                    nodeIt = find(id);
+                    }
+                
 				for(;numAdj;numAdj--)
-				{
-					is>>id;// get head node
-					hdIter = find(id);
-					if(hdIter==nodes.end())
-					{
-						// do a pre-insert...need it now!
-						hdIter =nodes.insert(nodes.end(), 
-							__NodeType<NodeInfo, ArcInfo >( Node(id, nd))); 
-					}
-					arc_insert(nodeIt,defaultInfo,hdIter);
-				}
+                    {
+                    is>>id;// get head node
+                    hdIter = find(id);
+                    if(hdIter==end())
+                        {
+                        // do a pre-insert...need it now!
+                        std::pair<NodeId, __NodeType<DynNet,NodeInfo,ArcInfo> > newPair;
+                        newPair.first = id;
+                        newPair.second = __NodeType<DynNet,NodeInfo, ArcInfo >( id, nd); 
+                        nodes.insert(newPair);
+                        hdIter = find(id);
+                        }
+                    arc_insert(nodeIt,defaultInfo,hdIter);
+                    }
 			}
 			idMgr.setMaxId(maxId);
 			is>>buffer;
@@ -819,28 +915,28 @@ namespace Cgc
 		}
 	};  
 
-	template < class NodeInfo, class ArcInfo>
-	const __ArcType<NodeInfo, ArcInfo > &ArcIterator<NodeInfo, ArcInfo >::operator*()const
-	{ 
-		return (*(*ait)); 
-	}
+	//template < class NetType, class NodeInfo, class ArcInfo>
+	//const __ArcType<NetType, NodeInfo, ArcInfo > &ArcIterator<NetType, NodeInfo, ArcInfo >::operator*()const
+	//{ 
+		//return (*(*ait)); 
+	//}
 
-	template < class NodeInfo, class ArcInfo>
-	__ArcType<NodeInfo,ArcInfo> &ArcIterator<NodeInfo,ArcInfo>::operator*()
-	{ 
-		return (*(*ait)); 
-	}
+	//template < class NetType, class NodeInfo, class ArcInfo>
+	//__ArcType<NetType, NodeInfo,ArcInfo> &ArcIterator<NetType, NodeInfo,ArcInfo>::operator*()
+	//{ 
+		//return (*(*ait)); 
+	//}
 
-	template < class NodeInfo, class ArcInfo>
-	inline bool operator!=(const ArcIterator<NodeInfo,ArcInfo> &arcIt1,
-		const ArcIterator<NodeInfo,ArcInfo> &arcIt2)
+	template < class NetType, class NodeInfo, class ArcInfo>
+	inline bool operator!=(const ArcIterator<NetType, NodeInfo,ArcInfo> &arcIt1,
+		const ArcIterator<NetType, NodeInfo,ArcInfo> &arcIt2)
 	{ 
 		return arcIt1.msvcCompareHack(arcIt2) != 0;
 	}
 
-	template < class NodeInfo, class ArcInfo>
-	inline bool operator==(const ArcIterator<NodeInfo,ArcInfo> &arcIt1,
-		const ArcIterator<NodeInfo,ArcInfo> &arcIt2)
+	template < class NetType, class NodeInfo, class ArcInfo>
+	inline bool operator==(const ArcIterator<NetType, NodeInfo,ArcInfo> &arcIt1,
+                           const ArcIterator<NetType, NodeInfo,ArcInfo> &arcIt2)
 	{ 
 		return arcIt1.msvcCompareHack(arcIt2) == 0;
 	}
@@ -870,51 +966,52 @@ namespace Cgc
 		return os;
 	}
 
-	template <class NodeInfo, class ArcInfo >
-	typename __NodeType<NodeInfo,ArcInfo>::iterator __NodeType<NodeInfo,ArcInfo>::insert(const __ArcType<NodeInfo,ArcInfo> &newArc)
+	template <class NetType, class NodeInfo, class ArcInfo >
+	typename __NodeType<NetType, NodeInfo,ArcInfo>::iterator
+    __NodeType<NetType, NodeInfo,ArcInfo>::insert(const __ArcType<NetType, NodeInfo,ArcInfo> &newArc)
 	{ 
-		__ArcType<NodeInfo,ArcInfo> * lclArc= 
-			new __ArcType<NodeInfo,ArcInfo>(newArc);
+		__ArcType<NetType, NodeInfo,ArcInfo> * lclArc= 
+			new __ArcType<NetType, NodeInfo,ArcInfo>(newArc);
 
 		MyArcBagIter ait = fwdArcs.insert(fwdArcs.end(),lclArc);
-		__NodeType<NodeInfo,ArcInfo> &node 
-			= const_cast< __NodeType<NodeInfo,ArcInfo> &>((*lclArc->head()));
+		__NodeType<NetType, NodeInfo,ArcInfo> &node 
+			= const_cast< __NodeType<NetType, NodeInfo,ArcInfo> &>((*lclArc->head()));
 		node.back_insert(lclArc);
-		return ArcIterator<NodeInfo,ArcInfo>(ait);
+		return ArcIterator<NetType, NodeInfo,ArcInfo>(ait);
 	}
 
-	template <class NodeInfo, class ArcInfo >
-	void __NodeType<NodeInfo,ArcInfo>::back_insert(const __ArcType<NodeInfo,ArcInfo> *newArc)
+	template <class NetType, class NodeInfo, class ArcInfo >
+	void __NodeType<NetType, NodeInfo,ArcInfo>::back_insert(const __ArcType<NetType, NodeInfo,ArcInfo> *newArc)
 	{ 
 #ifdef MSVCBUGS
 		backArcs.insert(backArcs.end(),const_cast<__ArcType<NodeInfo,ArcInfo> *>(newArc));
 #else
-		__ArcType<NodeInfo,ArcInfo> *nonConst = 
-			const_cast< __ArcType<NodeInfo,ArcInfo> *>(newArc);
+		__ArcType<NetType, NodeInfo,ArcInfo> *nonConst = 
+			const_cast< __ArcType<NetType, NodeInfo,ArcInfo> *>(newArc);
 		backArcs.insert(backArcs.end(),nonConst); 
 #endif
 	}
 
-	template <class NodeInfo, class ArcInfo >
-	void __NodeType<NodeInfo,ArcInfo>::back_erase(const __ArcType<NodeInfo,
+	template <class NetType, class NodeInfo, class ArcInfo >
+	void __NodeType<NetType, NodeInfo,ArcInfo>::back_erase(const __ArcType<NetType, NodeInfo,
 		ArcInfo> *arcToErase)
 
 	{ 
-		__ArcType<NodeInfo,ArcInfo> *nonConst=
-			const_cast<__ArcType<NodeInfo,ArcInfo> *>(arcToErase);
+		__ArcType<NetType, NodeInfo,ArcInfo> *nonConst=
+			const_cast<__ArcType<NetType, NodeInfo,ArcInfo> *>(arcToErase);
 		backArcs.erase(nonConst); 
 	}
 
-	template<class NodeInfo, class ArcInfo>
-	inline bool operator<(const __NodeType<NodeInfo,ArcInfo> &nd1,
-		const __NodeType<NodeInfo,ArcInfo> &nd2)
+	template<class NetType, class NodeInfo, class ArcInfo>
+	inline bool operator<(const __NodeType<NetType, NodeInfo,ArcInfo> &nd1,
+		const __NodeType<NetType, NodeInfo,ArcInfo> &nd2)
 	{ 
 		return nd1.getNodeIdHack()< nd2.getNodeIdHack();
 	}
 
-	template <class NodeInfo, class ArcInfo >
-	inline bool operator<(const __ArcType<NodeInfo,ArcInfo> &arc1, 
-		const __ArcType<NodeInfo,ArcInfo> &arc2) 
+	template <class NetType, class NodeInfo, class ArcInfo >
+	inline bool operator<(const __ArcType<NetType, NodeInfo,ArcInfo> &arc1, 
+                          const __ArcType<NetType, NodeInfo,ArcInfo> &arc2) 
 	{ 
 		//cout<<"comparing arcs.."<<std::endl;
 		//cout<<"arc1="<<&(*arc1.hd)<<"+"<<&(*arc1.tl)<<std::endl;
@@ -951,20 +1048,35 @@ namespace Cgc
 	{
 		return (rep1.compareHack(rep2));
 	}
-	template < class NodeInfo, class ArcInfo>
-	std::ostream &operator<<(std::ostream &os, const __NodeType<NodeInfo, ArcInfo > &node)
+
+	template < class NetType, class NodeInfo,class ArcInfo >
+	inline bool operator!=(const DynNetNodeIterator<NetType,NodeInfo,ArcInfo>  &rep1,
+		const DynNetNodeIterator<NetType,NodeInfo,ArcInfo>  &rep2)
+	{
+		return (rep1.compareHack2(rep2));
+	}
+
+	template <class NetType, class NodeInfo, class ArcInfo >
+	inline bool operator==(const DynNetNodeIterator<NetType,NodeInfo,ArcInfo> &rep1,
+		const DynNetNodeIterator<NetType,NodeInfo,ArcInfo> &rep2)
+	{
+		return (rep1.compareHack(rep2));
+	}
+
+	template < class NetType, class NodeInfo, class ArcInfo>
+	std::ostream &operator<<(std::ostream &os, const __NodeType<NetType, NodeInfo, ArcInfo > &node)
 	{ 
 		return os<<*node;
 	}
 
-	template < class NodeInfo, class ArcInfo>
-	std::ostream &operator<<(std::ostream &os, const __ArcType<NodeInfo, ArcInfo > &arc)
+	template < class NetType, class NodeInfo, class ArcInfo>
+	std::ostream &operator<<(std::ostream &os, const __ArcType<NetType, NodeInfo, ArcInfo > &arc)
 	{ 
 		return os<<*arc; 
 	}
 
-	template < class NodeInfo, class ArcInfo >
-	bool operator!=(const __NodeType<NodeInfo,ArcInfo> &n1, const __NodeType<NodeInfo,ArcInfo> &n2)
+	template < class NetType, class NodeInfo, class ArcInfo >
+	bool operator!=(const __NodeType<NetType, NodeInfo,ArcInfo> &n1, const __NodeType<NetType, NodeInfo,ArcInfo> &n2)
 	{
 		return (*n1) != (*n2);
 	}
