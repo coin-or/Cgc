@@ -69,7 +69,7 @@ void topoSortTest1(std::string testName)
     }
     // Check to see that nodes at the heads of arcs are later in the sequence
     // than their predecessors.
-    for(int cnt=0;cnt<nt->size();cnt++)
+    for(unsigned int cnt=0;cnt<nt->size();cnt++)
     {
         switch(cnt)
         {

@@ -9,6 +9,9 @@ All Rights Reserved.
 #include <iostream>
 #include <vector>
 // some forward declarations.
+#pragma warning(disable:4786)
+#pragma warning(disable:4996)
+
 namespace Cgc
 {
 	class NodeId;

@@ -113,8 +113,8 @@ namespace Cgc
 					assert(bFoundNodes);
 					bFoundArcs=true;
 					char a;
-					int tailNodeId;
-					int headNodeId;
+					unsigned int tailNodeId;
+					unsigned int headNodeId;
 					int minFlow;
 					int maxFlow;
 					int flowCost;

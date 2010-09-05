@@ -12,7 +12,8 @@
 class TestBed;
 
 #define __SPOT__ __FILE__,__LINE__
-
+#pragma warning(disable:4786)
+#pragma warning(disable:4996)
 class TestItem 
 {
 	static TestBed *theBed;

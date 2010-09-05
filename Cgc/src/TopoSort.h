@@ -38,7 +38,7 @@ namespace Cgc
             std::list<NodeId> activeList;
             // allocate space for output.
             order = std::vector<int>(net.size());
-            int nodeCntr=0;
+            unsigned int nodeCntr=0;
             // use in-degree to drive where we visit next.
             int *inDegree = new int[net.size()];
             // clean out the memory.
@@ -55,7 +55,7 @@ namespace Cgc
                 }
             }
             // if we found inDegrees actually zero, put them on the active list.
-            for(int cnt=0;cnt<net.size();cnt++)
+            for(unsigned int cnt=0;cnt<net.size();cnt++)
             {
                 if(inDegree[cnt]==0)
                 {
