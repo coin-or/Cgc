@@ -570,6 +570,7 @@ namespace Cgc
 			--(*this);
 			return tmp;
 		}
+        friend class DynNet<NodeInfo,ArcInfo>;
 	};
 	/** @brief Dynamic Network -- allows altering the graph after construction.
 	@ingroup Graphs
@@ -637,12 +638,25 @@ namespace Cgc
 			arcSize-=(*nodeIt).size();
 			arcSize-=(*nodeIt).back_size();
 			// remove the node's arcs
-			Node &node = const_cast<Node &>(*nodeIt);
-			node.disconnect();
+            (*(nodeIt.nodeIter)).second.disconnect();
+			//node.disconnect();
 			// remove the node
 			nodes.erase(nodeId); 
 		}
-		void erase(const iterator &nodeIt)
+        void erase(iterator &nodeIt)
+		{ 
+			// have to maintain arcSize manually...the node deletes the arcs
+			arcSize-=(*nodeIt).size();
+			arcSize-=(*nodeIt).back_size();
+
+			// remove the node's arcs
+			Node &node=const_cast<Node &>((*nodeIt));
+			node.disconnect();
+			// remove the node
+            
+			nodes.erase(getNodeId(nodeIt)); 
+		}
+        void erase(const iterator &nodeIt)
 		{ 
 			// have to maintain arcSize manually...the node deletes the arcs
 			arcSize-=(*nodeIt).size();
