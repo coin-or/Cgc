@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type = "text/xsl" href = "http://www.coin-or.org/projects/autoGen.xsl"?>
+<projectData xmlns="coin-or.org" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="coin-or.org http://www.coin-or.org/projects/autoGen.xsd">
+
+	<projectBasics>
+
+		<projectName>Cgc</projectName>
+
+		<projectDescription>
+		Cgc is a collection of network representations to facilitate
+		the development and implementation of network algorithms.
+		</projectDescription>
+		<projectShortDescription>
+		  A collection of network representations and algorithms.
+		</projectShortDescription>
+
+		<projectManager>hpwalton at yahoo.com</projectManager>
+
+		<projectHomePage>
+		https://projects.coin-or.org/Cgc 
+		</projectHomePage>
+
+                <projectLicense>Common Public License 1.0</projectLicense>
+                
+		<projectLicenseURL>
+		http://www.opensource.org/licenses/cpl1.0.php
+		</projectLicenseURL>
+
+		<coinLinkedProjects></coinLinkedProjects>
+		<otherLinkedPackages></otherLinkedPackages>
+
+		<projectLanguage>C++</projectLanguage>
+
+		<developmentStatus>
+
+			<activityStatus>Active</activityStatus>
+
+			<maturityLevel>2</maturityLevel>
+
+		</developmentStatus>
+
+                <testedPlatforms>
+
+                     <platform>
+                           <operatingSystem>Microsoft Windows</operatingSystem>
+                           <compiler>MSVC++/cl</compiler>
+                     </platform>
+
+                </testedPlatforms>
+
+		<projectCategories>
+
+			<category>
+			Graphs
+			</category>
+			<category>
+			Optimization utility
+			</category>
+			
+		</projectCategories>
+		
+	</projectBasics>
+
+	<leftMenuLinks>
+
+		<documentation>https://projects.coin-or.org/Cgc</documentation>
+
+		<sourceCodeDownload>
+		http://www.coin-or.org/download/source/Cgc
+		</sourceCodeDownload>
+
+		<binaryDownload> </binaryDownload>
+
+		<mailingList>http://list.coin-or.org/mailman/listinfo/cgc</mailingList>
+
+	</leftMenuLinks>
+
+	<!-- End of projectData block                                          -->
+</projectData>

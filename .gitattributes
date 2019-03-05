@@ -1,4 +1,5 @@
 * text=auto !eol
+.coin-or/projDesc.xml -text
 Cgc/AUTHORS -text
 Cgc/Externals -text
 Cgc/INSTALL -text
